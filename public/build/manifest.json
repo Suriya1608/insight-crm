@@ -1,0 +1,33 @@
+{
+  "_echo-BYoADo-N.js": {
+    "file": "assets/echo-BYoADo-N.js",
+    "name": "echo"
+  },
+  "resources/css/app.css": {
+    "file": "assets/app-txz0Q6ak.css",
+    "src": "resources/css/app.css",
+    "isEntry": true,
+    "name": "app",
+    "names": [
+      "app.css"
+    ]
+  },
+  "resources/js/app.js": {
+    "file": "assets/app-BtedvOSK.js",
+    "name": "app",
+    "src": "resources/js/app.js",
+    "isEntry": true,
+    "imports": [
+      "_echo-BYoADo-N.js"
+    ]
+  },
+  "resources/js/inertia-app.jsx": {
+    "file": "assets/inertia-app-RMDsN2m6.js",
+    "name": "inertia-app",
+    "src": "resources/js/inertia-app.jsx",
+    "isEntry": true,
+    "imports": [
+      "_echo-BYoADo-N.js"
+    ]
+  }
+}

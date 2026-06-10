@@ -1,0 +1,1270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Edu-CRM — Feature Overview</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Plus Jakarta Sans', 'Segoe UI', Arial, sans-serif; font-size: 14px; color: #1e293b; background: #f1f5f9; }
+  .wrapper { max-width: 1140px; margin: 0 auto; padding: 36px 24px; }
+
+  /* ── Cover ── */
+  .cover {
+    background: linear-gradient(135deg, #4f46e5 0%, #6366f1 50%, #818cf8 100%);
+    color: #fff; border-radius: 16px; padding: 52px 48px; margin-bottom: 36px;
+    position: relative; overflow: hidden;
+  }
+  .cover::before {
+    content: ''; position: absolute; inset: 0;
+    background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  }
+  .cover-inner { position: relative; }
+  .cover-tag { display: inline-block; background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.3); border-radius: 20px; padding: 4px 14px; font-size: 12px; font-weight: 600; margin-bottom: 18px; letter-spacing: 0.5px; }
+  .cover h1 { font-size: 36px; font-weight: 800; margin-bottom: 10px; line-height: 1.2; }
+  .cover .subtitle { font-size: 15px; opacity: 0.88; margin-bottom: 32px; max-width: 680px; line-height: 1.6; }
+  .cover .meta { display: flex; gap: 36px; flex-wrap: wrap; padding-top: 24px; border-top: 1px solid rgba(255,255,255,0.2); }
+  .cover .meta-item { display: flex; flex-direction: column; gap: 3px; }
+  .cover .meta-label { font-size: 10px; opacity: 0.65; text-transform: uppercase; letter-spacing: 1px; }
+  .cover .meta-value { font-size: 14px; font-weight: 700; }
+
+  /* ── TOC ── */
+  .toc { background: #fff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 28px 32px; margin-bottom: 36px; }
+  .toc h2 { font-size: 15px; font-weight: 700; margin-bottom: 18px; color: #0f172a; text-transform: uppercase; letter-spacing: 0.5px; }
+  .toc-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 6px 24px; }
+  .toc a { color: #6366f1; text-decoration: none; font-size: 13px; display: flex; align-items: center; gap: 8px; padding: 5px 0; font-weight: 500; }
+  .toc a:hover { color: #4f46e5; }
+  .toc-num { display: inline-flex; align-items: center; justify-content: center; width: 20px; height: 20px; background: #eef2ff; color: #6366f1; border-radius: 50%; font-size: 10px; font-weight: 700; flex-shrink: 0; }
+
+  /* ── Sections ── */
+  .section { background: #fff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 36px; margin-bottom: 28px; }
+  .section-header { display: flex; align-items: center; gap: 16px; margin-bottom: 28px; padding-bottom: 20px; border-bottom: 2px solid #f1f5f9; }
+  .section-icon { width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0; }
+  .icon-admin    { background: #eef2ff; }
+  .icon-manager  { background: #f0fdf4; }
+  .icon-tc       { background: #fff7ed; }
+  .icon-system   { background: #faf5ff; }
+  .icon-comms    { background: #ecfeff; }
+  .icon-report   { background: #fff1f2; }
+  .section-title { font-size: 22px; font-weight: 800; color: #0f172a; }
+  .section-desc  { font-size: 13px; color: #64748b; margin-top: 3px; }
+
+  /* ── Typography ── */
+  h3 { font-size: 16px; font-weight: 700; color: #0f172a; margin: 28px 0 14px; display: flex; align-items: center; gap: 8px; }
+  h3 .h3-dot { width: 6px; height: 6px; border-radius: 50%; background: #6366f1; flex-shrink: 0; }
+  h4 { font-size: 11px; font-weight: 700; color: #94a3b8; margin: 18px 0 10px; text-transform: uppercase; letter-spacing: 0.8px; }
+
+  /* ── Feature Grid ── */
+  .feature-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 14px; margin-bottom: 20px; }
+  .feature-card { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 18px; transition: border-color 0.2s; }
+  .feature-card:hover { border-color: #c7d2fe; }
+  .feature-card-title { font-weight: 700; font-size: 13px; color: #1e293b; margin-bottom: 10px; display: flex; align-items: center; gap: 7px; }
+  .feature-card ul { padding-left: 16px; }
+  .feature-card li { font-size: 12.5px; color: #475569; margin-bottom: 4px; line-height: 1.5; }
+
+  /* ── Big Feature Card ── */
+  .big-feature-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 16px; margin: 16px 0; }
+  .big-feature { border: 1px solid #e2e8f0; border-radius: 10px; padding: 20px 22px; }
+  .big-feature-title { font-weight: 700; font-size: 14px; color: #1e293b; margin-bottom: 12px; padding-bottom: 10px; border-bottom: 1px solid #f1f5f9; }
+  .big-feature ul { padding-left: 17px; }
+  .big-feature li { font-size: 13px; color: #374151; margin-bottom: 5px; line-height: 1.5; }
+
+  /* ── Tables ── */
+  table { width: 100%; border-collapse: collapse; font-size: 13px; margin: 14px 0 22px; }
+  th { background: #f8fafc; font-weight: 700; color: #374151; text-align: left; padding: 11px 15px; border: 1px solid #e2e8f0; font-size: 12px; text-transform: uppercase; letter-spacing: 0.4px; }
+  td { padding: 10px 15px; border: 1px solid #e2e8f0; color: #374151; vertical-align: top; line-height: 1.5; }
+  tr:nth-child(even) td { background: #fafbfc; }
+
+  /* ── Badges ── */
+  .badge { display: inline-block; padding: 2px 9px; border-radius: 20px; font-size: 11px; font-weight: 700; }
+  .badge-indigo { background: #eef2ff; color: #4f46e5; }
+  .badge-green  { background: #dcfce7; color: #16a34a; }
+  .badge-red    { background: #fee2e2; color: #dc2626; }
+  .badge-orange { background: #ffedd5; color: #c2410c; }
+  .badge-purple { background: #f3e8ff; color: #7c3aed; }
+  .badge-cyan   { background: #ecfeff; color: #0e7490; }
+  .badge-gray   { background: #f1f5f9; color: #475569; }
+
+  /* ── Role Chip ── */
+  .role { display: inline-flex; align-items: center; gap: 5px; padding: 3px 11px; border-radius: 20px; font-size: 11px; font-weight: 700; }
+  .role-admin    { background: #eef2ff; color: #4f46e5; }
+  .role-manager  { background: #dcfce7; color: #166534; }
+  .role-tc       { background: #ffedd5; color: #9a3412; }
+  .role-viewer   { background: #f3e8ff; color: #7c3aed; }
+
+  /* ── Flow ── */
+  .flow { display: flex; align-items: center; gap: 0; flex-wrap: wrap; margin: 16px 0; }
+  .flow-step { background: #eef2ff; border: 1px solid #c7d2fe; border-radius: 8px; padding: 10px 16px; font-size: 12.5px; color: #4f46e5; font-weight: 600; min-width: 130px; text-align: center; }
+  .flow-arrow { color: #a5b4fc; font-size: 20px; padding: 0 8px; }
+
+  /* ── Info / Note ── */
+  .info { background: #eef2ff; border-left: 4px solid #6366f1; border-radius: 0 8px 8px 0; padding: 13px 17px; font-size: 13px; color: #3730a3; margin: 16px 0; line-height: 1.6; }
+  .note { background: #fffbeb; border-left: 4px solid #f59e0b; border-radius: 0 8px 8px 0; padding: 13px 17px; font-size: 13px; color: #92400e; margin: 16px 0; line-height: 1.6; }
+
+  /* ── Two-col ── */
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+  .three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
+  @media (max-width: 768px) { .two-col, .three-col { grid-template-columns: 1fr; } }
+
+  /* ── Pill list ── */
+  .pill-list { display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0; }
+  .pill { background: #f1f5f9; border: 1px solid #e2e8f0; border-radius: 20px; padding: 4px 13px; font-size: 12px; color: #475569; font-weight: 500; }
+  .pill-primary { background: #eef2ff; border-color: #c7d2fe; color: #4f46e5; }
+
+  /* ── Channel card ── */
+  .channel-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; margin: 14px 0; }
+  .channel-card { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 16px 18px; }
+  .channel-card-icon { font-size: 24px; margin-bottom: 8px; }
+  .channel-card-name { font-weight: 700; font-size: 13px; color: #0f172a; margin-bottom: 4px; }
+  .channel-card-desc { font-size: 12px; color: #64748b; line-height: 1.4; }
+
+  /* ── Separator ── */
+  .sep { height: 1px; background: #f1f5f9; margin: 24px 0; }
+
+  ul.plain { padding-left: 18px; }
+  ul.plain li { margin-bottom: 5px; font-size: 13px; color: #374151; line-height: 1.5; }
+
+  /* ── Footer ── */
+  .footer { text-align: center; color: #94a3b8; font-size: 12px; padding: 28px 0 10px; }
+
+  /* ── Print ── */
+  @media print {
+    body { background: #fff; }
+    .wrapper { padding: 0; max-width: 100%; }
+    .section { break-inside: avoid; }
+    .cover { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  }
+</style>
+</head>
+<body>
+<div class="wrapper">
+
+  <!-- ═══ COVER ═══ -->
+  <div class="cover">
+    <div class="cover-inner">
+      <div class="cover-tag">PRODUCT OVERVIEW · 2026</div>
+      <h1>Edu-CRM System</h1>
+      <p class="subtitle">
+        A complete Admission & Lead Management CRM for educational institutions — covering
+        multi-role access, omnichannel communication, intelligent automation, and real-time reporting.
+      </p>
+      <div class="meta">
+        <div class="meta-item"><span class="meta-label">Product</span><span class="meta-value">Admission CRM</span></div>
+        <div class="meta-item"><span class="meta-label">Stack</span><span class="meta-value">Laravel 12 · Inertia/React · Bootstrap 5</span></div>
+        <div class="meta-item"><span class="meta-label">Roles</span><span class="meta-value">Admin · Manager · Telecaller · Report Viewer</span></div>
+        <div class="meta-item"><span class="meta-label">Updated</span><span class="meta-value">May 2026</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ TOC ═══ -->
+  <div class="toc">
+    <h2>Table of Contents</h2>
+    <div class="toc-grid">
+      <a href="#admin"><span class="toc-num">1</span> Admin Panel — Full System Control</a>
+      <a href="#manager"><span class="toc-num">2</span> Manager Panel — Team &amp; Lead Management</a>
+      <a href="#telecaller"><span class="toc-num">3</span> Telecaller Panel — Daily Operations</a>
+      <a href="#report-viewer"><span class="toc-num">4</span> Report Viewer — Analytics Access</a>
+      <a href="#channels"><span class="toc-num">5</span> Omnichannel Communication</a>
+      <a href="#automation"><span class="toc-num">6</span> Automation &amp; Background Jobs</a>
+      <a href="#campaigns"><span class="toc-num">7</span> Campaign Management</a>
+      <a href="#integrations"><span class="toc-num">8</span> External Integrations</a>
+      <a href="#security"><span class="toc-num">9</span> Security &amp; Access Control</a>
+    </div>
+  </div>
+
+
+  <!-- ═══════════════════════════════════════════════
+       1. ADMIN PANEL
+  ════════════════════════════════════════════════ -->
+  <div class="section" id="admin">
+    <div class="section-header">
+      <div class="section-icon icon-admin">🛡️</div>
+      <div>
+        <div class="section-title">1. Admin Panel</div>
+        <div class="section-desc">Full system control — users, leads, automation rules, settings, and analytics</div>
+      </div>
+    </div>
+
+    <!-- Dashboard -->
+    <h3><span class="h3-dot"></span>Dashboard</h3>
+    <div class="feature-grid">
+      <div class="feature-card">
+        <div class="feature-card-title">📊 Live Metrics</div>
+        <ul>
+          <li>Total leads in system</li>
+          <li>Active managers &amp; telecallers</li>
+          <li>Active calls (live count)</li>
+          <li>Missed calls today</li>
+          <li>Pending follow-ups</li>
+          <li>Monthly conversions</li>
+        </ul>
+      </div>
+      <div class="feature-card">
+        <div class="feature-card-title">📈 Charts &amp; Trends</div>
+        <ul>
+          <li>Lead source breakdown (top 8)</li>
+          <li>14-day call volume trend</li>
+          <li>14-day WhatsApp activity (inbound/outbound)</li>
+          <li>Conversion rate trend line</li>
+        </ul>
+      </div>
+      <div class="feature-card">
+        <div class="feature-card-title">👥 Real-time Presence</div>
+        <ul>
+          <li>Online/offline status for all users</li>
+          <li>Auto offline after 90s inactivity</li>
+          <li>Last seen timestamp</li>
+          <li>Live dashboard refresh (20s polling)</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="sep"></div>
+    <!-- User Management -->
+    <h3><span class="h3-dot"></span>User Management</h3>
+    <table>
+      <tr><th>Feature</th><th>Description</th></tr>
+      <tr><td><strong>Create Users</strong></td><td>Add manager, telecaller, or report-viewer accounts with auto-generated employee IDs</td></tr>
+      <tr><td><strong>Edit Users</strong></td><td>Update name, email, phone, role, and password anytime</td></tr>
+      <tr><td><strong>Toggle Status</strong></td><td>Activate or deactivate accounts instantly — deactivated users cannot log in</td></tr>
+      <tr><td><strong>Force Logout</strong></td><td>Terminate any active user session remotely from the admin panel</td></tr>
+      <tr><td><strong>Unlock Account</strong></td><td>Unlock accounts that have been locked due to failed login attempts</td></tr>
+      <tr><td><strong>Welcome Email</strong></td><td>Send login credentials to new users via email on account creation</td></tr>
+      <tr><td><strong>TCN Account Link</strong></td><td>Connect per-user TCN softphone OAuth accounts from the admin interface</td></tr>
+      <tr><td><strong>Presence Snapshot</strong></td><td>View real-time online/offline status across all managers and telecallers</td></tr>
+    </table>
+
+    <div class="sep"></div>
+    <!-- Lead Management -->
+    <h3><span class="h3-dot"></span>Lead Management</h3>
+    <div class="two-col">
+      <div>
+        <h4>Lead Views</h4>
+        <ul class="plain">
+          <li><strong>All Leads</strong> — Complete lead database with search &amp; filter</li>
+          <li><strong>Unassigned</strong> — Leads not yet assigned to a manager</li>
+          <li><strong>Assigned</strong> — Leads allocated to managers</li>
+          <li><strong>Converted</strong> — Successfully enrolled/converted leads</li>
+          <li><strong>Lost</strong> — Not-interested leads</li>
+          <li><strong>Duplicates</strong> — Detected duplicates by phone or email</li>
+        </ul>
+      </div>
+      <div>
+        <h4>Lead Operations</h4>
+        <ul class="plain">
+          <li>Assign single lead to a manager</li>
+          <li>Bulk assign multiple leads at once</li>
+          <li>Reassign lead to a different telecaller</li>
+          <li>Merge duplicate lead records</li>
+          <li>Import leads from CSV / Excel (with preview &amp; validation)</li>
+          <li>Export leads to CSV / Excel / PDF</li>
+          <li>View complete lead activity timeline</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="sep"></div>
+    <!-- Academic Config -->
+    <h3><span class="h3-dot"></span>Academic Configuration</h3>
+    <div class="feature-grid">
+      <div class="feature-card">
+        <div class="feature-card-title">🎓 Courses</div>
+        <ul>
+          <li>Create, edit, delete courses</li>
+          <li>Toggle course active/inactive</li>
+          <li>Sort and reorder courses</li>
+        </ul>
+      </div>
+      <div class="feature-card">
+        <div class="feature-card-title">📅 Academic Years</div>
+        <ul>
+          <li>Create and manage academic years</li>
+          <li>Set active academic year</li>
+        </ul>
+      </div>
+      <div class="feature-card">
+        <div class="feature-card-title">📌 Intakes</div>
+        <ul>
+          <li>Create and manage course intakes</li>
+          <li>Link intakes to academic years</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="sep"></div>
+    <!-- Automation Rules -->
+    <h3><span class="h3-dot"></span>Automation Rules</h3>
+    <div class="big-feature-grid">
+      <div class="big-feature">
+        <div class="big-feature-title">⚡ Lead Assignment Automation</div>
+        <ul>
+          <li>Enable / disable auto-assignment</li>
+          <li>Round-robin distribution mode</li>
+          <li>Course-based routing (course → manager mapping)</li>
+          <li>Open pool mode (telecallers claim leads)</li>
+          <li>Auto-assign only to active managers</li>
+          <li>Auto-assign to telecallers after N hours</li>
+          <li>Create, toggle, and delete course-manager mappings</li>
+        </ul>
+      </div>
+      <div class="big-feature">
+        <div class="big-feature-title">🔔 Follow-up Reminders</div>
+        <ul>
+          <li>Enable / disable reminder system</li>
+          <li>Configure days-before reminder trigger</li>
+          <li>Overdue follow-up highlight toggle</li>
+          <li>Daily summary email to managers</li>
+        </ul>
+      </div>
+      <div class="big-feature">
+        <div class="big-feature-title">🚨 Escalation Engine</div>
+        <ul>
+          <li>Enable / disable escalation system</li>
+          <li>Escalate missed follow-ups automatically</li>
+          <li>Escalate response SLA violations</li>
+          <li>Configurable SLA window (5 – 10,080 minutes)</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="sep"></div>
+    <!-- Email Management -->
+    <h3><span class="h3-dot"></span>Email Template &amp; Campaign Management</h3>
+    <div class="two-col">
+      <div>
+        <h4>Email Templates</h4>
+        <ul class="plain">
+          <li>WYSIWYG template builder</li>
+          <li>Image &amp; attachment upload support</li>
+          <li>Send test email from admin</li>
+          <li>Toggle template active/inactive</li>
+          <li>Create, edit, delete templates</li>
+        </ul>
+      </div>
+      <div>
+        <h4>Email Campaigns</h4>
+        <ul class="plain">
+          <li>Create campaigns from templates</li>
+          <li>Upload recipient lists (Excel)</li>
+          <li>Schedule campaigns for future delivery</li>
+          <li>Campaign status tracking (scheduled / sending / completed)</li>
+          <li>Email open &amp; click tracking</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="sep"></div>
+    <!-- Reports -->
+    <h3><span class="h3-dot"></span>Reports &amp; Analytics</h3>
+    <div class="feature-grid">
+      <div class="feature-card">
+        <div class="feature-card-title">📊 Performance Reports</div>
+        <ul>
+          <li>Telecaller performance (calls, talk time, conversions, efficiency score)</li>
+          <li>Manager performance (conversion rate, pending follow-ups)</li>
+        </ul>
+      </div>
+      <div class="feature-card">
+        <div class="feature-card-title">📞 Call Reports</div>
+        <ul>
+          <li>Call efficiency (total, completed, missed, avg duration)</li>
+          <li>Response time analysis (lead-to-first-call)</li>
+          <li>Period-based trends (daily, weekly, monthly)</li>
+        </ul>
+      </div>
+      <div class="feature-card">
+        <div class="feature-card-title">🎯 Conversion Reports</div>
+        <ul>
+          <li>Status distribution analysis</li>
+          <li>Lead source conversion rates</li>
+          <li>Course-wise performance</li>
+        </ul>
+      </div>
+      <div class="feature-card">
+        <div class="feature-card-title">📁 Export Options</div>
+        <ul>
+          <li>Export any report as PDF, Excel, or CSV</li>
+          <li>Date range filter (7d, 30d, 90d, quarter, year)</li>
+          <li>Multi-filter: source, telecaller, manager</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="sep"></div>
+    <!-- System Settings -->
+    <h3><span class="h3-dot"></span>System Settings</h3>
+    <div class="feature-grid">
+      <div class="feature-card">
+        <div class="feature-card-title">📧 SMTP / Email</div>
+        <ul>
+          <li>Host, port, encryption setup</li>
+          <li>Credential management</li>
+          <li>From name &amp; address</li>
+          <li>Test SMTP connection</li>
+        </ul>
+      </div>
+      <div class="feature-card">
+        <div class="feature-card-title">💬 SMS Provider</div>
+        <ul>
+          <li>Twilio, MSG91, TextLocal or custom</li>
+          <li>Sender ID &amp; API key setup</li>
+          <li>Enable/disable SMS notifications</li>
+        </ul>
+      </div>
+      <div class="feature-card">
+        <div class="feature-card-title">📱 WhatsApp (Meta)</div>
+        <ul>
+          <li>Meta Cloud API credentials</li>
+          <li>Phone number ID &amp; webhook token</li>
+          <li>Template name &amp; language config</li>
+        </ul>
+      </div>
+      <div class="feature-card">
+        <div class="feature-card-title">📞 VoIP / TCN</div>
+        <ul>
+          <li>TCN OAuth credentials (client ID, secret)</li>
+          <li>Caller ID &amp; redirect URI</li>
+          <li>Primary call provider selection</li>
+        </ul>
+      </div>
+      <div class="feature-card">
+        <div class="feature-card-title">🕒 Business Hours</div>
+        <ul>
+          <li>Enable/disable business hours enforcement</li>
+          <li>Set open/close time</li>
+          <li>Define working days</li>
+          <li>System timezone configuration</li>
+        </ul>
+      </div>
+      <div class="feature-card">
+        <div class="feature-card-title">⚙️ General Settings</div>
+        <ul>
+          <li>System name, logo, favicon</li>
+          <li>Employee ID prefix</li>
+          <li>Default lead status for new leads</li>
+          <li>Terms &amp; privacy page content</li>
+        </ul>
+      </div>
+      <div class="feature-card">
+        <div class="feature-card-title">🔐 Security Settings</div>
+        <ul>
+          <li>Two-factor authentication toggle</li>
+          <li>Session timeout configuration</li>
+        </ul>
+      </div>
+      <div class="feature-card">
+        <div class="feature-card-title">🔔 Notification Settings</div>
+        <ul>
+          <li>In-app &amp; email: lead assignment alerts</li>
+          <li>In-app &amp; email: follow-up reminders</li>
+          <li>In-app &amp; email: escalation alerts</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="sep"></div>
+    <!-- Marketing / Social -->
+    <h3><span class="h3-dot"></span>Marketing &amp; Social Integrations (Admin Setup)</h3>
+    <div class="pill-list">
+      <span class="pill-primary">Facebook Lead Ads — OAuth setup</span>
+      <span class="pill-primary">Lead portal / external capture endpoint</span>
+      <span class="pill-primary">Google Meet OAuth credentials</span>
+      <span class="pill-primary">Zoom API credentials &amp; test connection</span>
+    </div>
+
+    <div class="sep"></div>
+    <!-- Documents -->
+    <h3><span class="h3-dot"></span>Document Management</h3>
+    <ul class="plain">
+      <li>Upload and organise system-wide documents</li>
+      <li>Share documents across all roles (managers, telecallers)</li>
+      <li>Delete documents from the admin panel</li>
+    </ul>
+
+  </div><!-- /admin -->
+
+
+  <!-- ═══════════════════════════════════════════════
+       2. MANAGER PANEL
+  ════════════════════════════════════════════════ -->
+  <div class="section" id="manager">
+    <div class="section-header">
+      <div class="section-icon icon-manager">👔</div>
+      <div>
+        <div class="section-title">2. Manager Panel</div>
+        <div class="section-desc">Team oversight, lead management, multi-channel communication, and campaign supervision</div>
+      </div>
+    </div>
+
+    <!-- Dashboard -->
+    <h3><span class="h3-dot"></span>Dashboard</h3>
+    <div class="feature-grid">
+      <div class="feature-card">
+        <div class="feature-card-title">📊 Period Metrics</div>
+        <ul>
+          <li>Leads assigned today / this week / this month</li>
+          <li>Total calls made in period</li>
+          <li>Total call duration in period</li>
+          <li>WhatsApp conversations count</li>
+          <li>Overall conversion rate</li>
+        </ul>
+      </div>
+      <div class="feature-card">
+        <div class="feature-card-title">👤 Telecaller Overview</div>
+        <ul>
+          <li>Per-telecaller: leads, calls, conversions, rate</li>
+          <li>Best performing telecaller highlight</li>
+          <li>Real-time online/offline presence</li>
+          <li>Pending follow-ups per telecaller</li>
+        </ul>
+      </div>
+      <div class="feature-card">
+        <div class="feature-card-title">📋 Activity Feed</div>
+        <ul>
+          <li>Missed inbound calls feed</li>
+          <li>Missed follow-ups count &amp; list</li>
+          <li>Lead source distribution chart</li>
+          <li>Follow-up calendar (monthly)</li>
+          <li>Course performance breakdown</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="sep"></div>
+    <!-- Lead Management -->
+    <h3><span class="h3-dot"></span>Lead Management</h3>
+    <div class="two-col">
+      <div>
+        <h4>Lead Views &amp; Filters</h4>
+        <ul class="plain">
+          <li>Paginated lead list with full search</li>
+          <li>Filter by telecaller, status, date range, source, course</li>
+          <li>Search by name, phone, email</li>
+          <li>Claim leads from open pool</li>
+          <li>View duplicate leads</li>
+        </ul>
+      </div>
+      <div>
+        <h4>Lead Operations</h4>
+        <ul class="plain">
+          <li>Create new leads manually</li>
+          <li>Assign leads to telecallers</li>
+          <li>Change lead status</li>
+          <li>Add notes to lead</li>
+          <li>Import leads (CSV/Excel with preview)</li>
+          <li>Export leads (Excel / PDF)</li>
+          <li>View full lead activity &amp; history</li>
+        </ul>
+      </div>
+    </div>
+
+    <h4>Lead Pipeline — Kanban View</h4>
+    <ul class="plain">
+      <li>Visual Kanban board showing leads grouped by status</li>
+      <li>Move leads between pipeline stages</li>
+      <li>Paginated pipeline columns</li>
+    </ul>
+
+    <div class="sep"></div>
+    <!-- Lead Communication -->
+    <h3><span class="h3-dot"></span>Lead Communication</h3>
+    <div class="feature-grid">
+      <div class="feature-card">
+        <div class="feature-card-title">📱 WhatsApp</div>
+        <ul>
+          <li>Send text messages to leads</li>
+          <li>Send quick-reply templates</li>
+          <li>Send media (images, documents)</li>
+          <li>View full message history</li>
+        </ul>
+      </div>
+      <div class="feature-card">
+        <div class="feature-card-title">📧 Email</div>
+        <ul>
+          <li>Send emails using saved templates</li>
+          <li>Compose &amp; send directly to leads</li>
+        </ul>
+      </div>
+      <div class="feature-card">
+        <div class="feature-card-title">📹 Video Meetings</div>
+        <ul>
+          <li>Schedule or start instant Google Meet</li>
+          <li>Schedule or start instant Zoom meeting</li>
+          <li>Meeting status tracking per lead</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="sep"></div>
+    <!-- Follow-ups -->
+    <h3><span class="h3-dot"></span>Follow-up Management</h3>
+    <div class="pill-list">
+      <span class="pill-primary">Today's follow-ups</span>
+      <span class="pill-primary">Overdue follow-ups</span>
+      <span class="pill-primary">Upcoming follow-ups</span>
+      <span class="pill-primary">Missed by telecallers view</span>
+      <span class="pill-primary">Follow-up calendar view</span>
+    </div>
+
+    <div class="sep"></div>
+    <!-- Telecaller Management -->
+    <h3><span class="h3-dot"></span>Telecaller Management</h3>
+    <ul class="plain">
+      <li>View all telecallers assigned to the manager</li>
+      <li>Monitor individual telecaller performance (leads, calls, conversion rate, efficiency score)</li>
+      <li>Real-time presence status snapshot (online/offline)</li>
+    </ul>
+
+    <div class="sep"></div>
+    <!-- Campaigns -->
+    <h3><span class="h3-dot"></span>Outbound Campaigns</h3>
+    <div class="two-col">
+      <div>
+        <h4>Campaign Operations</h4>
+        <ul class="plain">
+          <li>Create and manage outbound campaigns</li>
+          <li>Import campaign contacts (Excel/CSV)</li>
+          <li>Distribute contacts to telecallers</li>
+          <li>Set campaign status (active / paused / completed)</li>
+          <li>View campaign performance metrics</li>
+        </ul>
+      </div>
+      <div>
+        <h4>Contact-level Actions</h4>
+        <ul class="plain">
+          <li>View contact detail and history</li>
+          <li>Update contact status &amp; set follow-up</li>
+          <li>Log calls &amp; add notes</li>
+          <li>Reassign contacts between telecallers</li>
+          <li>Send WhatsApp messages &amp; media</li>
+          <li>View WhatsApp message history</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="sep"></div>
+    <!-- Email Campaigns -->
+    <h3><span class="h3-dot"></span>Email Campaigns</h3>
+    <ul class="plain">
+      <li>Create email campaigns using saved templates</li>
+      <li>Upload recipient contact lists (Excel)</li>
+      <li>Download sample Excel template</li>
+      <li>View campaign delivery statistics</li>
+      <li>Delete campaigns</li>
+    </ul>
+
+    <div class="sep"></div>
+    <!-- WhatsApp Hub -->
+    <h3><span class="h3-dot"></span>WhatsApp Hub</h3>
+    <ul class="plain">
+      <li>Central interface for all WhatsApp conversations</li>
+      <li>Real-time inbox polling (7s refresh)</li>
+      <li>Thread-level message management</li>
+    </ul>
+    </div>
+
+    <div class="sep"></div>
+    <!-- Reports -->
+    <h3><span class="h3-dot"></span>Reports</h3>
+    <div class="pill-list">
+      <span class="pill">Summary dashboard</span>
+      <span class="pill">Telecaller performance</span>
+      <span class="pill">Conversion analysis</span>
+      <span class="pill">Source performance</span>
+      <span class="pill">Period trends</span>
+      <span class="pill">Response time</span>
+      <span class="pill">Call efficiency</span>
+      <span class="pill">Export PDF / Excel</span>
+    </div>
+
+  </div><!-- /manager -->
+
+
+  <!-- ═══════════════════════════════════════════════
+       3. TELECALLER PANEL
+  ════════════════════════════════════════════════ -->
+  <div class="section" id="telecaller">
+    <div class="section-header">
+      <div class="section-icon icon-tc">📞</div>
+      <div>
+        <div class="section-title">3. Telecaller Panel</div>
+        <div class="section-desc">Day-to-day lead handling, call logging, follow-ups, and performance tracking</div>
+      </div>
+    </div>
+
+    <!-- Dashboard -->
+    <h3><span class="h3-dot"></span>Dashboard</h3>
+    <div class="feature-grid">
+      <div class="feature-card">
+        <div class="feature-card-title">📊 Today's Snapshot</div>
+        <ul>
+          <li>Total assigned leads</li>
+          <li>New leads received today</li>
+          <li>Today's pending follow-ups</li>
+          <li>Overdue follow-ups count</li>
+          <li>Total calls made today</li>
+          <li>Talk time today (HH:MM:SS)</li>
+        </ul>
+      </div>
+      <div class="feature-card">
+        <div class="feature-card-title">📞 Call Activity</div>
+        <ul>
+          <li>Active call count</li>
+          <li>Recent missed callbacks</li>
+          <li>Call outcome breakdown by type</li>
+        </ul>
+      </div>
+      <div class="feature-card">
+        <div class="feature-card-title">📅 Calendar</div>
+        <ul>
+          <li>Monthly follow-up calendar</li>
+          <li>Missed callback list with lead details</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="sep"></div>
+    <!-- Leads -->
+    <h3><span class="h3-dot"></span>Lead Management</h3>
+    <div class="two-col">
+      <div>
+        <h4>Views &amp; Search</h4>
+        <ul class="plain">
+          <li>View all assigned leads (paginated)</li>
+          <li>Search by lead code, name, phone, email, source, course</li>
+          <li>Filter by status and date range</li>
+          <li>Kanban pipeline view with status columns</li>
+          <li>Bulk status update</li>
+        </ul>
+      </div>
+      <div>
+        <h4>Lead Actions</h4>
+        <ul class="plain">
+          <li>View lead detail with full activity history</li>
+          <li>Update lead status</li>
+          <li>Add notes</li>
+          <li>Log calls with outcomes</li>
+          <li>Export leads (Excel / PDF)</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="sep"></div>
+    <!-- Communication -->
+    <h3><span class="h3-dot"></span>Lead Communication</h3>
+    <div class="feature-grid">
+      <div class="feature-card">
+        <div class="feature-card-title">📱 WhatsApp</div>
+        <ul>
+          <li>Send messages to assigned leads</li>
+          <li>Send quick-reply templates</li>
+          <li>Send media (images, documents)</li>
+          <li>View full message history</li>
+        </ul>
+      </div>
+      <div class="feature-card">
+        <div class="feature-card-title">📧 Email</div>
+        <ul>
+          <li>Send emails using templates</li>
+          <li>Direct email compose to leads</li>
+        </ul>
+      </div>
+      <div class="feature-card">
+        <div class="feature-card-title">📹 Meetings</div>
+        <ul>
+          <li>Schedule / start Google Meet</li>
+          <li>Schedule / start Zoom meeting</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="sep"></div>
+    <!-- Follow-ups -->
+    <h3><span class="h3-dot"></span>Follow-up Management</h3>
+    <table>
+      <tr><th>Feature</th><th>Description</th></tr>
+      <tr><td><strong>Today's Follow-ups</strong></td><td>List of follow-ups scheduled for today with lead details</td></tr>
+      <tr><td><strong>Overdue Follow-ups</strong></td><td>Missed follow-ups highlighted for immediate action</td></tr>
+      <tr><td><strong>Upcoming Follow-ups</strong></td><td>Future-dated follow-up schedule</td></tr>
+      <tr><td><strong>Completed Follow-ups</strong></td><td>Archive of all completed follow-up entries</td></tr>
+      <tr><td><strong>Create &amp; Reschedule</strong></td><td>Create new follow-ups with date/time; reschedule existing ones</td></tr>
+      <tr><td><strong>Mark Complete</strong></td><td>Mark follow-ups as done after the interaction</td></tr>
+      <tr><td><strong>Export</strong></td><td>Export follow-up lists by scope (today, overdue, all)</td></tr>
+      <tr><td><strong>Calendar View</strong></td><td>Monthly calendar showing follow-up counts per day</td></tr>
+    </table>
+
+    <div class="sep"></div>
+    <!-- Performance -->
+    <h3><span class="h3-dot"></span>Performance Tracking</h3>
+    <div class="pill-list">
+      <span class="pill-primary">Daily performance (calls, talk time, outcomes)</span>
+      <span class="pill-primary">Weekly performance summary</span>
+      <span class="pill-primary">Monthly performance summary</span>
+      <span class="pill-primary">Export by scope (PDF / Excel)</span>
+    </div>
+
+    <div class="sep"></div>
+    <!-- Call Management -->
+    <h3><span class="h3-dot"></span>Call Log Management</h3>
+    <div class="pill-list">
+      <span class="pill">View outbound calls</span>
+      <span class="pill">View inbound calls</span>
+      <span class="pill">View missed calls</span>
+      <span class="pill">Full call history</span>
+      <span class="pill">Export call logs (by scope)</span>
+    </div>
+
+    <div class="sep"></div>
+    <!-- Campaigns -->
+    <h3><span class="h3-dot"></span>Campaign Participation</h3>
+    <ul class="plain">
+      <li>View campaigns assigned by manager</li>
+      <li>View campaign contacts assigned to this telecaller</li>
+      <li>Add notes, update status, set follow-ups on contacts</li>
+      <li>Log calls per campaign contact</li>
+      <li>Send WhatsApp messages &amp; media to campaign contacts</li>
+      <li>View WhatsApp history per contact</li>
+    </ul>
+
+    <div class="sep"></div>
+    <!-- Status / Presence -->
+    <h3><span class="h3-dot"></span>Status &amp; Presence</h3>
+    <ul class="plain">
+      <li>Heartbeat signal to maintain online status (auto, every 20s)</li>
+      <li>Manually mark as offline</li>
+      <li>Set availability status for the team</li>
+      <li>View real-time presence panel snapshot</li>
+      <li>Receive in-app notifications for assignments &amp; follow-ups</li>
+    </ul>
+
+  </div><!-- /telecaller -->
+
+
+  <!-- ═══════════════════════════════════════════════
+       4. REPORT VIEWER
+  ════════════════════════════════════════════════ -->
+  <div class="section" id="report-viewer">
+    <div class="section-header">
+      <div class="section-icon icon-report">📋</div>
+      <div>
+        <div class="section-title">4. Report Viewer</div>
+        <div class="section-desc">Read-only analytics access — no lead or user management capabilities</div>
+      </div>
+    </div>
+
+    <div class="info">The Report Viewer role provides senior stakeholders or analysts with full access to all CRM reports and analytics without the ability to modify any data.</div>
+
+    <div class="feature-grid">
+      <div class="feature-card">
+        <div class="feature-card-title">📊 Available Reports</div>
+        <ul>
+          <li>Telecaller performance report</li>
+          <li>Manager performance report</li>
+          <li>Conversion analysis</li>
+          <li>Lead source performance</li>
+          <li>Period trend analysis</li>
+          <li>Call efficiency metrics</li>
+          <li>Response time metrics</li>
+          <li>Escalation matrix</li>
+        </ul>
+      </div>
+      <div class="feature-card">
+        <div class="feature-card-title">⚙️ Report Controls</div>
+        <ul>
+          <li>Date range filtering (7d, 30d, 90d, quarter, year)</li>
+          <li>Filter by telecaller, manager, source</li>
+          <li>Export any report as PDF, Excel, or CSV</li>
+          <li>Aggregated KPI dashboard view</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ═══════════════════════════════════════════════
+       5. OMNICHANNEL COMMUNICATION
+  ════════════════════════════════════════════════ -->
+  <div class="section" id="channels">
+    <div class="section-header">
+      <div class="section-icon icon-comms">🌐</div>
+      <div>
+        <div class="section-title">5. Omnichannel Communication</div>
+        <div class="section-desc">Every major channel — from VoIP calls to WhatsApp, email, video, and social messaging</div>
+      </div>
+    </div>
+
+    <div class="channel-grid">
+      <div class="channel-card">
+        <div class="channel-card-icon">📞</div>
+        <div class="channel-card-name">VoIP — TCN Softphone</div>
+        <div class="channel-card-desc">Embedded softphone. Click-to-call, inbound caller lookup, hold/resume/DTMF, auto call logging, agent status management.</div>
+      </div>
+      <div class="channel-card">
+        <div class="channel-card-icon">📱</div>
+        <div class="channel-card-name">WhatsApp (Meta Cloud API)</div>
+        <div class="channel-card-desc">Inbound &amp; outbound messaging. Template support. Media upload. Real-time history. Webhook-based receive. 24h session window.</div>
+      </div>
+      <div class="channel-card">
+        <div class="channel-card-icon">📧</div>
+        <div class="channel-card-name">Email (SMTP)</div>
+        <div class="channel-card-desc">Template-based sending, scheduled campaigns, open &amp; click tracking, bounce handling, recipient management.</div>
+      </div>
+      <div class="channel-card">
+        <div class="channel-card-icon">📹</div>
+        <div class="channel-card-name">Google Meet</div>
+        <div class="channel-card-desc">OAuth-based integration. Schedule or start instant meetings with leads. Meeting status tracked per lead.</div>
+      </div>
+      <div class="channel-card">
+        <div class="channel-card-icon">🎥</div>
+        <div class="channel-card-name">Zoom</div>
+        <div class="channel-card-desc">API credential setup. Schedule or start instant Zoom meetings with leads. Test connection from admin.</div>
+      </div>
+      <div class="channel-card">
+        <div class="channel-card-icon">📣</div>
+        <div class="channel-card-name">Facebook Lead Ads</div>
+        <div class="channel-card-desc">Webhook integration to auto-capture leads from Facebook ad forms directly into the CRM.</div>
+      </div>
+      <div class="channel-card">
+        <div class="channel-card-icon">🔗</div>
+        <div class="channel-card-name">External Lead API</div>
+        <div class="channel-card-desc">CORS-enabled API endpoint for WordPress, landing pages, and third-party tools to push leads directly into the CRM.</div>
+      </div>
+    </div>
+
+    <div class="sep"></div>
+    <h3><span class="h3-dot"></span>TCN Softphone — Key Features</h3>
+    <div class="two-col">
+      <ul class="plain">
+        <li>Embedded softphone iframe in the CRM interface</li>
+        <li>Per-user OAuth authentication (admin-linked)</li>
+        <li>Manual dial with operator control</li>
+        <li>Call hold, resume, and DTMF tone support</li>
+      </ul>
+      <ul class="plain">
+        <li>Incoming caller lookup (matches to CRM lead)</li>
+        <li>Automatic call log creation on call end</li>
+        <li>Call outcome recording via modal after each call</li>
+        <li>Agent status management (available/unavailable)</li>
+      </ul>
+    </div>
+
+  </div><!-- /channels -->
+
+
+  <!-- ═══════════════════════════════════════════════
+       6. AUTOMATION & BACKGROUND JOBS
+  ════════════════════════════════════════════════ -->
+  <div class="section" id="automation">
+    <div class="section-header">
+      <div class="section-icon icon-system">⚡</div>
+      <div>
+        <div class="section-title">6. Automation &amp; Background Jobs</div>
+        <div class="section-desc">Scheduled automation, smart assignment, escalation engine, and email/notification dispatch</div>
+      </div>
+    </div>
+
+    <h3><span class="h3-dot"></span>Lead Assignment Flow</h3>
+    <div class="flow">
+      <div class="flow-step">New Lead Arrives</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">Assignment Mode Check</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">Round-Robin / Course-Based / Open Pool</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">Auto-Assign to Manager</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">Auto-Assign to Telecaller (after N hours)</div>
+    </div>
+
+    <div class="sep"></div>
+    <h3><span class="h3-dot"></span>Escalation Flow</h3>
+    <div class="flow">
+      <div class="flow-step">Follow-up Missed <br>/ SLA Breached</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">Escalation Job Triggers (every minute)</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">Alert to Manager (in-app + email)</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">Escalation Logged in Audit</div>
+    </div>
+
+    <div class="sep"></div>
+    <h3><span class="h3-dot"></span>Scheduled Jobs</h3>
+    <table>
+      <tr><th>Job</th><th>Trigger</th><th>Function</th></tr>
+      <tr>
+        <td><strong>Run Automation</strong></td>
+        <td><span class="badge badge-indigo">Every Minute</span></td>
+        <td>Dispatches follow-up reminders and escalations for all telecallers</td>
+      </tr>
+      <tr>
+        <td><strong>Daily Summary Email</strong></td>
+        <td><span class="badge badge-purple">19:00 Daily</span></td>
+        <td>Sends a daily performance summary email to all managers</td>
+      </tr>
+      <tr>
+        <td><strong>Email Campaign Job</strong></td>
+        <td><span class="badge badge-green">On Demand / Scheduled</span></td>
+        <td>Asynchronously dispatches bulk email campaigns to recipient lists</td>
+      </tr>
+      <tr>
+        <td><strong>Auto-Assign Lead</strong></td>
+        <td><span class="badge badge-orange">On Lead Creation</span></td>
+        <td>Auto-assigns new leads to manager/telecaller based on automation settings</td>
+      </tr>
+    </table>
+
+    <div class="sep"></div>
+    <h3><span class="h3-dot"></span>Notification Types</h3>
+    <div class="feature-grid">
+      <div class="feature-card">
+        <div class="feature-card-title">🔔 In-App Notifications</div>
+        <ul>
+          <li>New lead assigned</li>
+          <li>Follow-up reminder</li>
+          <li>Escalation alert</li>
+          <li>Incoming WhatsApp message</li>
+          <li>Missed follow-up warning</li>
+        </ul>
+      </div>
+      <div class="feature-card">
+        <div class="feature-card-title">📧 Email Notifications</div>
+        <ul>
+          <li>Welcome credentials (new user)</li>
+          <li>Lead assignment notification</li>
+          <li>Follow-up reminder</li>
+          <li>Escalation notification</li>
+          <li>Daily manager summary</li>
+          <li>2FA verification code</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="sep"></div>
+    <h3><span class="h3-dot"></span>Audit &amp; Activity Logging</h3>
+    <ul class="plain">
+      <li>Every lead action logged (who, what, when — automatically)</li>
+      <li>Lead merge history tracked in audit log</li>
+      <li>Bulk operation records maintained</li>
+      <li>User session activity logged (login, logout, force-logout)</li>
+      <li>Silent logging — no user intervention required</li>
+    </ul>
+
+  </div><!-- /automation -->
+
+
+  <!-- ═══════════════════════════════════════════════
+       7. CAMPAIGN MANAGEMENT
+  ════════════════════════════════════════════════ -->
+  <div class="section" id="campaigns">
+    <div class="section-header">
+      <div class="section-icon icon-manager">📣</div>
+      <div>
+        <div class="section-title">7. Campaign Management</div>
+        <div class="section-desc">Outbound contact campaigns and email broadcast campaigns — independent of the lead pipeline</div>
+      </div>
+    </div>
+
+    <div class="info">Campaign contacts are fully independent from CRM leads — they have their own pipeline, assignment, and WhatsApp thread.</div>
+
+    <h3><span class="h3-dot"></span>Outbound Contact Campaigns</h3>
+    <div class="big-feature-grid">
+      <div class="big-feature">
+        <div class="big-feature-title">Manager — Campaign Control</div>
+        <ul>
+          <li>Create new outbound campaigns</li>
+          <li>Import contacts via Excel/CSV upload</li>
+          <li>Distribute contacts to telecallers</li>
+          <li>Pause, resume, or complete campaigns</li>
+          <li>View per-campaign performance metrics</li>
+          <li>Reassign contacts between telecallers</li>
+        </ul>
+      </div>
+      <div class="big-feature">
+        <div class="big-feature-title">Telecaller — Contact Actions</div>
+        <ul>
+          <li>View assigned campaign contacts</li>
+          <li>Update contact status</li>
+          <li>Set and manage follow-ups</li>
+          <li>Log call outcomes</li>
+          <li>Add internal notes</li>
+          <li>Send WhatsApp messages &amp; media</li>
+          <li>View full WhatsApp history per contact</li>
+        </ul>
+      </div>
+      <div class="big-feature">
+        <div class="big-feature-title">WhatsApp in Campaigns</div>
+        <ul>
+          <li>Send text messages to campaign contacts</li>
+          <li>Send media (images, documents)</li>
+          <li>Template quick-replies: Intro, Follow-up, Course Info</li>
+          <li>24h session window check (Meta rule compliant)</li>
+          <li>Falls back to approved template outside 24h window</li>
+          <li>Real-time message polling (7s)</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="sep"></div>
+    <h3><span class="h3-dot"></span>Email Broadcast Campaigns</h3>
+    <div class="two-col">
+      <ul class="plain">
+        <li>Create email campaigns using any active template</li>
+        <li>Upload recipient lists via Excel</li>
+        <li>Schedule campaigns for future delivery</li>
+        <li>Background dispatch (non-blocking queue)</li>
+      </ul>
+      <ul class="plain">
+        <li>Track open rates &amp; click-throughs</li>
+        <li>Campaign status: scheduled / sending / completed</li>
+        <li>View statistics per campaign</li>
+        <li>Sample Excel template download</li>
+      </ul>
+    </div>
+
+  </div><!-- /campaigns -->
+
+
+  <!-- ═══════════════════════════════════════════════
+       8. EXTERNAL INTEGRATIONS
+  ════════════════════════════════════════════════ -->
+  <div class="section" id="integrations">
+    <div class="section-header">
+      <div class="section-icon icon-comms">🔌</div>
+      <div>
+        <div class="section-title">8. External Integrations</div>
+        <div class="section-desc">Third-party platforms and APIs connected to the CRM</div>
+      </div>
+    </div>
+
+    <table>
+      <tr><th>Integration</th><th>Type</th><th>Purpose</th></tr>
+      <tr>
+        <td><strong>TCN VoIP</strong></td>
+        <td><span class="badge badge-indigo">Telephony</span></td>
+        <td>Embedded softphone, click-to-call, inbound routing, call logging &amp; outcomes</td>
+      </tr>
+      <tr>
+        <td><strong>Meta WhatsApp Cloud API</strong></td>
+        <td><span class="badge badge-green">Messaging</span></td>
+        <td>Bidirectional WhatsApp messaging for leads and campaign contacts</td>
+      </tr>
+      <tr>
+        <td><strong>Meta Facebook Lead Ads</strong></td>
+        <td><span class="badge badge-green">Lead Capture</span></td>
+        <td>Auto-capture leads from Facebook ad form submissions via webhook</td>
+      </tr>
+      <tr>
+        <td><strong>Google OAuth / Meet</strong></td>
+        <td><span class="badge badge-purple">Video</span></td>
+        <td>Schedule and start Google Meet sessions linked to lead records</td>
+      </tr>
+      <tr>
+        <td><strong>Zoom API</strong></td>
+        <td><span class="badge badge-purple">Video</span></td>
+        <td>Schedule and start Zoom meetings from the CRM; instant meeting creation</td>
+      </tr>
+      <tr>
+        <td><strong>SMTP / Email Providers</strong></td>
+        <td><span class="badge badge-orange">Email</span></td>
+        <td>Transactional and campaign email delivery with tracking pixels</td>
+      </tr>
+      <tr>
+        <td><strong>SMS Providers</strong></td>
+        <td><span class="badge badge-cyan">SMS</span></td>
+        <td>Twilio, MSG91, TextLocal, or custom HTTP provider for SMS notifications</td>
+      </tr>
+      <tr>
+        <td><strong>External Lead API</strong></td>
+        <td><span class="badge badge-gray">REST API</span></td>
+        <td>CORS-enabled endpoint for WordPress, landing pages, and third-party lead sources</td>
+      </tr>
+    </table>
+
+  </div><!-- /integrations -->
+
+
+  <!-- ═══════════════════════════════════════════════
+       9. SECURITY & ACCESS CONTROL
+  ════════════════════════════════════════════════ -->
+  <div class="section" id="security">
+    <div class="section-header">
+      <div class="section-icon icon-admin">🔒</div>
+      <div>
+        <div class="section-title">9. Security &amp; Access Control</div>
+        <div class="section-desc">Role-based permissions, encrypted credentials, session management, and audit logging</div>
+      </div>
+    </div>
+
+    <div class="two-col">
+      <div>
+        <h4>Role-Based Access</h4>
+        <ul class="plain">
+          <li><span class="role role-admin">Admin</span> — Full system access, settings, all users</li>
+          <li><span class="role role-manager">Manager</span> — Team &amp; lead management, campaigns, reports</li>
+          <li><span class="role role-tc">Telecaller</span> — Own leads, calls, follow-ups, campaigns</li>
+          <li><span class="role role-viewer">Report Viewer</span> — Read-only analytics access</li>
+        </ul>
+        <br>
+        <ul class="plain">
+          <li>Middleware-enforced role isolation on every route</li>
+          <li>Policy-based authorization (Lead, User, Setting policies)</li>
+          <li>Telecallers can only access their own assigned data</li>
+        </ul>
+      </div>
+      <div>
+        <h4>Security Features</h4>
+        <ul class="plain">
+          <li>Two-factor authentication (email-based OTP)</li>
+          <li>Session timeout configuration</li>
+          <li>Admin force-logout for any user</li>
+          <li>Account lockout after failed login attempts</li>
+          <li>Encrypted storage of API credentials (SMTP, WhatsApp, TCN, Zoom)</li>
+          <li>Password hashing with validation rules</li>
+          <li>CORS policy for external API endpoints</li>
+          <li>Complete audit trail for all user actions</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="sep"></div>
+    <h3><span class="h3-dot"></span>Lead Intelligence &amp; Aging</h3>
+    <div class="feature-grid">
+      <div class="feature-card">
+        <div class="feature-card-title">🏷️ Lead Aging Badge</div>
+        <ul>
+          <li>Visual age indicator on every lead card</li>
+          <li>Days since lead creation (automatically computed)</li>
+          <li>Color-coded: fresh, aging, stale</li>
+        </ul>
+      </div>
+      <div class="feature-card">
+        <div class="feature-card-title">🔍 Duplicate Detection</div>
+        <ul>
+          <li>Detect duplicates by phone or email at import</li>
+          <li>Merge duplicate lead records (admin)</li>
+          <li>Duplicate leads flagged in separate view</li>
+        </ul>
+      </div>
+      <div class="feature-card">
+        <div class="feature-card-title">📌 Lead Pipeline</div>
+        <ul>
+          <li>Visual Kanban board with status columns</li>
+          <li>Drag-and-drop or button-based status moves</li>
+          <li>Bulk status changes across multiple leads</li>
+        </ul>
+      </div>
+    </div>
+
+  </div><!-- /security -->
+
+
+  <div class="footer">
+    Edu-CRM Feature Overview &nbsp;·&nbsp; Admission Management Platform &nbsp;·&nbsp; May 2026
+  </div>
+
+</div><!-- /wrapper -->
+</body>
+</html>

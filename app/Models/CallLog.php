@@ -1,0 +1,49 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+use App\Traits\Auditable;
+
+class CallLog extends Model
+{
+    use Auditable;
+
+    protected $fillable = [
+        'lead_id',
+        'campaign_contact_id',
+        'user_id',
+        'provider',
+        'call_sid',
+        'customer_number',
+        'direction',
+        'status',
+        'answered_at',
+        'ended_at',
+        'ended_by',
+        'end_reason',
+        'duration',
+        'recording_url',
+        'outcome',
+    ];
+
+    protected $casts = [
+        'answered_at' => 'datetime',
+        'ended_at'    => 'datetime',
+    ];
+
+    public function lead()
+    {
+        return $this->belongsTo(Lead::class);
+    }
+
+    public function campaignContact()
+    {
+        return $this->belongsTo(\App\Models\CampaignContact::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+}

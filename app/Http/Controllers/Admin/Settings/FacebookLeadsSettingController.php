@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin\Settings;
 use App\Http\Controllers\Controller;
 use App\Models\Setting;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 
 class FacebookLeadsSettingController extends Controller
 {
@@ -44,5 +45,29 @@ class FacebookLeadsSettingController extends Controller
 
         return redirect()->route('admin.settings.facebook-leads')
             ->with('success', 'Facebook Lead Ads settings saved.');
+    }
+
+    public function subscribeAppToPage()
+    {
+        $pageToken = Setting::getSecure('fb_leads_page_token', '');
+        $pageId    = Setting::getSecure('fb_leads_page_id', '');
+
+        if (! $pageToken || ! $pageId) {
+            return back()->with('fb_subscribe_error', 'Page Token and Page ID must be saved first.');
+        }
+
+        $response = Http::timeout(15)->post("https://graph.facebook.com/v19.0/{$pageId}/subscribed_apps", [
+            'subscribed_fields' => 'leadgen',
+            'access_token'      => $pageToken,
+        ]);
+
+        $body = $response->json();
+
+        if ($response->successful() && ($body['success'] ?? false)) {
+            return back()->with('fb_subscribe_success', 'App successfully subscribed to the page. Leadgen webhook is active.');
+        }
+
+        $errorMsg = $body['error']['message'] ?? $response->body();
+        return back()->with('fb_subscribe_error', 'Subscription failed: ' . $errorMsg);
     }
 }

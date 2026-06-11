@@ -5,6 +5,21 @@
 @section('content')
     @include('admin.settings.partials.nav')
 
+    @if(session('fb_subscribe_success'))
+        <div class="alert alert-success alert-dismissible fade show mb-3" role="alert">
+            <span class="material-icons align-middle me-1" style="font-size:18px;">check_circle</span>
+            {{ session('fb_subscribe_success') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    @endif
+    @if(session('fb_subscribe_error'))
+        <div class="alert alert-danger alert-dismissible fade show mb-3" role="alert">
+            <span class="material-icons align-middle me-1" style="font-size:18px;">error</span>
+            {{ session('fb_subscribe_error') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    @endif
+
     <div class="chart-card">
         <div class="chart-header mb-3">
             <h3>Facebook & Instagram Lead Ads</h3>
@@ -92,9 +107,25 @@
 
             </div>
 
-            <div class="mt-4">
+            <div class="mt-4 d-flex gap-2 flex-wrap">
                 <button class="btn btn-primary">Save Facebook Lead Ads Settings</button>
             </div>
         </form>
+
+        <hr class="my-4">
+
+        <div>
+            <h5 class="fw-bold mb-1">Subscribe App to Page</h5>
+            <p class="text-muted mb-3" style="font-size:13px;">
+                After saving your Page Token and Page ID above, click this button to link the app to your Facebook Page so webhook lead events are delivered.
+            </p>
+            <form method="POST" action="{{ route('admin.settings.facebook-leads.subscribe-page') }}">
+                @csrf
+                <button class="btn btn-warning fw-semibold">
+                    <span class="material-icons align-middle me-1" style="font-size:16px;">link</span>
+                    Subscribe App to Page (Enable Leadgen Webhook)
+                </button>
+            </form>
+        </div>
     </div>
 @endsection

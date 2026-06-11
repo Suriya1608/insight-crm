@@ -215,6 +215,7 @@ Route::middleware(['auth', \App\Http\Middleware\RoleMiddleware::class . ':admin'
             Route::post('/pages', [PageSettingsController::class, 'update'])->name('pages.update');
             Route::get('/facebook-leads', [FacebookLeadsSettingController::class, 'show'])->name('facebook-leads');
             Route::post('/facebook-leads', [FacebookLeadsSettingController::class, 'update'])->name('facebook-leads.update');
+            Route::post('/facebook-leads/subscribe-page', [FacebookLeadsSettingController::class, 'subscribeAppToPage'])->name('facebook-leads.subscribe-page');
             Route::get('/lead-portals', [LeadPortalsSettingController::class, 'show'])->name('lead-portals');
             Route::post('/lead-portals', [LeadPortalsSettingController::class, 'update'])->name('lead-portals.update');
             Route::get('/security', [SettingsController::class, 'security'])->name('security');

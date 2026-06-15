@@ -49,11 +49,28 @@ class FacebookLeadsSettingController extends Controller
 
     public function subscribeAppToPage()
     {
-        $pageToken = Setting::getSecure('fb_leads_page_token', '');
-        $pageId    = Setting::getSecure('fb_leads_page_id', '');
+        $savedToken = Setting::getSecure('fb_leads_page_token', '');
+        $pageId     = Setting::getSecure('fb_leads_page_id', '');
 
-        if (! $pageToken || ! $pageId) {
+        if (! $savedToken || ! $pageId) {
             return back()->with('fb_subscribe_error', 'Page Token and Page ID must be saved first.');
+        }
+
+        // Exchange User Token → Page Access Token via /me/accounts
+        $pageToken = $savedToken;
+        $accountsResp = Http::timeout(15)->get('https://graph.facebook.com/v19.0/me/accounts', [
+            'access_token' => $savedToken,
+        ]);
+
+        if ($accountsResp->successful()) {
+            foreach ($accountsResp->json('data', []) as $page) {
+                if ($page['id'] === $pageId && ! empty($page['access_token'])) {
+                    $pageToken = $page['access_token'];
+                    // Save the real Page Access Token so future calls work directly
+                    Setting::setSecure('fb_leads_page_token', $pageToken);
+                    break;
+                }
+            }
         }
 
         $response = Http::timeout(15)->post("https://graph.facebook.com/v19.0/{$pageId}/subscribed_apps", [

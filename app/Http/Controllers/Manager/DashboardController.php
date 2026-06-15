@@ -165,7 +165,7 @@ class DashboardController extends Controller
             ->limit(8)
             ->get();
 
-        $serviceStats = DB::table('leads')
+        $courseStats = DB::table('leads')
             ->join('services', 'leads.service_id', '=', 'services.id')
             ->where('leads.assigned_by', $managerId)
             ->selectRaw("services.name as service_name, COUNT(*) as total, SUM(leads.status = 'converted') as conversions")
@@ -174,7 +174,7 @@ class DashboardController extends Controller
             ->limit(10)
             ->get()
             ->map(fn($row) => [
-                'service'     => $row->service_name,
+                'course'      => $row->service_name,
                 'total'       => (int) $row->total,
                 'conversions' => (int) $row->conversions,
                 'rate'        => $row->total > 0 ? round($row->conversions / $row->total * 100, 1) : 0,
@@ -240,7 +240,7 @@ class DashboardController extends Controller
                 'customer_number'     => $c->customer_number ?? null,
                 'encrypted_lead_id'   => $c->lead_id ? encrypt($c->lead_id) : null,
             ])->values(),
-            'serviceStats'             => $serviceStats->values(),
+            'courseStats'              => $courseStats->values(),
             'followupCalendar'         => $followupCalendar,
             // URLs
             'presenceSnapshotUrl'      => route('manager.telecaller-status.snapshot'),

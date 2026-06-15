@@ -906,7 +906,7 @@ export default function Dashboard({
     missedFollowups, missedFollowupList,
     leadSource, telecallerStats,
     telecallerPresence, missedInboundCalls,
-    courseStats, followupCalendar,
+    courseStats = [], followupCalendar,
     presenceSnapshotUrl, calendarDataUrl,
     telecallersUrl, leadsCreateUrl,
 }) {

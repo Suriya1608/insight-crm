@@ -65,6 +65,10 @@ class FacebookLeadsSettingController extends Controller
         ]);
         $accountsData = $accountsResp->json('data', []);
         $debug[]      = 'me/accounts pages found: ' . count($accountsData);
+        $debug[]      = 'Stored page ID: ' . $pageId;
+        foreach ($accountsData as $page) {
+            $debug[] = 'API returned page ID: ' . ($page['id'] ?? 'none') . ' name: ' . ($page['name'] ?? 'none');
+        }
 
         foreach ($accountsData as $page) {
             if ($page['id'] === $pageId && ! empty($page['access_token'])) {

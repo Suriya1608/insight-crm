@@ -56,7 +56,7 @@ class FacebookLeadsSettingController extends Controller
             return back()->with('fb_subscribe_error', 'Page Token and Page ID must be saved first.');
         }
 
-        // Exchange User Token → Page Access Token via /me/accounts
+        // Try to get Page Access Token via /me/accounts (works for User tokens)
         $pageToken = $savedToken;
         $accountsResp = Http::timeout(15)->get('https://graph.facebook.com/v19.0/me/accounts', [
             'access_token' => $savedToken,
@@ -66,10 +66,22 @@ class FacebookLeadsSettingController extends Controller
             foreach ($accountsResp->json('data', []) as $page) {
                 if ($page['id'] === $pageId && ! empty($page['access_token'])) {
                     $pageToken = $page['access_token'];
-                    // Save the real Page Access Token so future calls work directly
                     Setting::setSecure('fb_leads_page_token', $pageToken);
                     break;
                 }
+            }
+        }
+
+        // Fallback: fetch Page Access Token directly from the page endpoint
+        // (works for System User tokens that have page admin access)
+        if ($pageToken === $savedToken) {
+            $pageResp = Http::timeout(15)->get("https://graph.facebook.com/v19.0/{$pageId}", [
+                'fields'       => 'access_token,name',
+                'access_token' => $savedToken,
+            ]);
+            if ($pageResp->successful() && ! empty($pageResp->json('access_token'))) {
+                $pageToken = $pageResp->json('access_token');
+                Setting::setSecure('fb_leads_page_token', $pageToken);
             }
         }
 

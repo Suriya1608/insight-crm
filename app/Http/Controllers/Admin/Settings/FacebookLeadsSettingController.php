@@ -56,34 +56,42 @@ class FacebookLeadsSettingController extends Controller
             return back()->with('fb_subscribe_error', 'Page Token and Page ID must be saved first.');
         }
 
-        // Try to get Page Access Token via /me/accounts (works for User tokens)
-        $pageToken = $savedToken;
+        $debug = [];
+
+        // Step 1: try /me/accounts (works for regular User tokens)
+        $pageToken    = $savedToken;
         $accountsResp = Http::timeout(15)->get('https://graph.facebook.com/v19.0/me/accounts', [
             'access_token' => $savedToken,
         ]);
+        $accountsData = $accountsResp->json('data', []);
+        $debug[]      = 'me/accounts pages found: ' . count($accountsData);
 
-        if ($accountsResp->successful()) {
-            foreach ($accountsResp->json('data', []) as $page) {
-                if ($page['id'] === $pageId && ! empty($page['access_token'])) {
-                    $pageToken = $page['access_token'];
-                    Setting::setSecure('fb_leads_page_token', $pageToken);
-                    break;
-                }
+        foreach ($accountsData as $page) {
+            if ($page['id'] === $pageId && ! empty($page['access_token'])) {
+                $pageToken = $page['access_token'];
+                Setting::setSecure('fb_leads_page_token', $pageToken);
+                $debug[] = 'Page token retrieved from me/accounts';
+                break;
             }
         }
 
-        // Fallback: fetch Page Access Token directly from the page endpoint
-        // (works for System User tokens that have page admin access)
+        // Step 2: fallback — fetch page token directly (works for System User tokens)
         if ($pageToken === $savedToken) {
             $pageResp = Http::timeout(15)->get("https://graph.facebook.com/v19.0/{$pageId}", [
                 'fields'       => 'access_token,name',
                 'access_token' => $savedToken,
             ]);
+            $debug[] = 'Direct page fetch status: ' . $pageResp->status();
+            $debug[] = 'Direct page fetch body: ' . $pageResp->body();
+
             if ($pageResp->successful() && ! empty($pageResp->json('access_token'))) {
                 $pageToken = $pageResp->json('access_token');
                 Setting::setSecure('fb_leads_page_token', $pageToken);
+                $debug[] = 'Page token retrieved from direct page fetch';
             }
         }
+
+        $debug[] = 'Using token type: ' . ($pageToken === $savedToken ? 'original saved token' : 'exchanged page token');
 
         $response = Http::timeout(15)->post("https://graph.facebook.com/v19.0/{$pageId}/subscribed_apps", [
             'subscribed_fields' => 'leadgen',
@@ -97,6 +105,7 @@ class FacebookLeadsSettingController extends Controller
         }
 
         $errorMsg = $body['error']['message'] ?? $response->body();
-        return back()->with('fb_subscribe_error', 'Subscription failed: ' . $errorMsg);
+        $debugStr = implode(' | ', $debug);
+        return back()->with('fb_subscribe_error', 'Subscription failed: ' . $errorMsg . ' [DEBUG: ' . $debugStr . ']');
     }
 }

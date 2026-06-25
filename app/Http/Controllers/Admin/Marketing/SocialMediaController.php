@@ -50,13 +50,23 @@ class SocialMediaController extends Controller
 
     private function handleLeadEvent(Request $request)
     {
+        $payload = $request->json()->all();
+        $object  = $payload['object'] ?? 'unknown';
+
+        Log::info('Facebook webhook received', [
+            'object' => $object,
+            'ip'     => $request->ip(),
+        ]);
+
         // Verify HMAC signature
         $appSecret = Setting::getSecure('fb_leads_app_secret', '');
         if ($appSecret) {
             $sig      = $request->header('X-Hub-Signature-256', '');
             $expected = 'sha256=' . hash_hmac('sha256', $request->getContent(), $appSecret);
             if (! hash_equals($expected, $sig)) {
-                Log::warning('Facebook webhook HMAC mismatch');
+                Log::warning('Facebook webhook HMAC mismatch', [
+                    'received_sig' => substr($sig, 0, 20) . '...',
+                ]);
                 return response('Forbidden', 403);
             }
         }
@@ -66,8 +76,6 @@ class SocialMediaController extends Controller
             Log::error('Facebook webhook: no page token configured');
             return response('EVENT_RECEIVED', 200);
         }
-
-        $payload = $request->json()->all();
 
         foreach ($payload['entry'] ?? [] as $entry) {
             foreach ($entry['changes'] ?? [] as $change) {
@@ -172,12 +180,18 @@ class SocialMediaController extends Controller
 
         $courseId = $course ? Course::where('name', trim($course))->value('id') : null;
 
+        try {
+            $academicYearId = \App\Models\AcademicYear::current()?->id;
+        } catch (\Throwable) {
+            $academicYearId = null;
+        }
+
         Lead::create([
             'name'             => $name ?? ($email ?? 'Unknown'),
             'phone'            => $phone ?? '',
             'email'            => $email,
             'course_id'        => $courseId,
-            'academic_year_id' => \App\Models\AcademicYear::current()?->id,
+            'academic_year_id' => $academicYearId,
             'quota'            => 'counselling',
             'source'           => $source,
             'source_type'      => 'landing_page',

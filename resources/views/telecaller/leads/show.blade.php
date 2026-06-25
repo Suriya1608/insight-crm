@@ -59,8 +59,8 @@
                                 <span class="material-icons">school</span>
                             </div>
                             <div>
-                                <div class="sl-info-label">Course Applied</div>
-                                <div class="sl-info-val">{{ $lead->course ?? '—' }}</div>
+                                <div class="sl-info-label">Service</div>
+                                <div class="sl-info-val">{{ $lead->service_name ?? $lead->service?->name ?? '—' }}</div>
                             </div>
                         </div>
                         <div class="sl-info-item">

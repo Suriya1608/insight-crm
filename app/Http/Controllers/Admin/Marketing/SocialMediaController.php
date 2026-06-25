@@ -147,6 +147,9 @@ class SocialMediaController extends Controller
             $fields[$field['name']] = $field['values'][0] ?? null;
         }
 
+        // Log ALL fields so we can see every field name the Facebook form sends
+        Log::info('Facebook lead raw fields', ['fields' => $fields]);
+
         $name  = $fields['full_name'] ?? $fields['name'] ?? null;
         $phone = $fields['phone_number'] ?? $fields['phone'] ?? $fields['whatsapp_number'] ?? $fields['mobile'] ?? null;
         $email = $fields['email'] ?? null;
@@ -157,14 +160,22 @@ class SocialMediaController extends Controller
             return;
         }
 
-        $course = $fields['course']
-            ?? $fields['program']
-            ?? $fields['course_interest']
-            ?? $fields['area_of_interest']
-            ?? $fields['business_type']
-            ?? $fields['service']
-            ?? $fields['interest']
-            ?? null;
+        $knownServiceKeys = ['course', 'program', 'course_interest', 'area_of_interest', 'business_type', 'service', 'interest', 'service_interest', 'looking_for', 'requirement', 'product', 'enquiry_for'];
+        $course = null;
+        foreach ($knownServiceKeys as $key) {
+            if (!empty($fields[$key])) { $course = $fields[$key]; break; }
+        }
+        // Fallback: any field that isn't a standard contact field might be the service
+        if (!$course) {
+            $stdKeys = ['full_name', 'name', 'phone_number', 'phone', 'whatsapp_number', 'mobile', 'email'];
+            foreach ($fields as $key => $value) {
+                if (!in_array($key, $stdKeys, true) && !empty($value)) {
+                    $course = $value;
+                    Log::info('Facebook lead service captured from fallback field', ['field' => $key, 'value' => $value]);
+                    break;
+                }
+            }
+        }
 
         // Meta ad identifiers — from webhook payload and Graph API response
         $adId         = $changeValue['ad_id']       ?? $leadData['ad_id']       ?? null;

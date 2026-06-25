@@ -174,8 +174,8 @@
         </div>
         <div class="col-md-4">
             <div class="admin-info-card">
-                <div class="admin-info-label">Course Applied</div>
-                <div class="admin-info-value small">{{ $lead->course ?: '-' }}</div>
+                <div class="admin-info-label">Service</div>
+                <div class="admin-info-value small">{{ $lead->service_name ?? $lead->service?->name ?? '-' }}</div>
             </div>
         </div>
 

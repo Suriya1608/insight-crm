@@ -27,6 +27,7 @@ class Lead extends Model
         'state',
         'pincode',
         'service_id',
+        'service_name',
         'source',
         'source_type',
         'source_category',

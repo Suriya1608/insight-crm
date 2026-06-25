@@ -393,7 +393,7 @@ class LeadManagementController extends Controller
     {
         $filters = $request->only([
             'search', 'manager_id', 'telecaller_id', 'status', 'date_range', 'date_from', 'date_to',
-            'service_id', 'source', 'gender',
+            'service_name', 'source', 'gender',
             'state', 'city', 'district', 'followup', 'no_activity_days',
             'sla', 'is_duplicate', 'is_active', 'aged_min', 'aged_max',
             'scope',
@@ -410,7 +410,7 @@ class LeadManagementController extends Controller
             $headers = ['Lead Code', 'Name', 'Phone', 'Email', 'Service', 'Status', 'Manager', 'Telecaller', 'Days Aged', 'Created'];
             $rows = $leads->map(fn($l) => [
                 $l->lead_code, $l->name, $l->phone ?? '', $l->email ?? '',
-                $l->service?->name ?? '',
+                $l->service_name ?? $l->service?->name ?? '',
                 ucfirst(str_replace('_', ' ', $l->status)),
                 $l->assignedBy?->name ?? '—', $l->assignedUser?->name ?? '—',
                 $l->days_aged, $l->created_at->format('d M Y'),
@@ -458,7 +458,7 @@ class LeadManagementController extends Controller
         if ($request->filled('manager_id'))       $query->where('assigned_by',       $request->manager_id);
         if ($request->filled('telecaller_id'))    $query->where('assigned_to',        $request->telecaller_id);
         if ($request->filled('status'))           $query->where('status',             $request->status);
-        if ($request->filled('service_id'))        $query->where('service_id',         $request->service_id);
+        if ($request->filled('service_name'))      $query->where('service_name', 'like', '%' . $request->service_name . '%');
         if ($request->filled('source'))           $query->where('source',             $request->source);
         if ($request->filled('gender'))           $query->where('gender',             $request->gender);
         if ($request->filled('state'))            $query->where('state',    'like',   '%' . $request->state    . '%');

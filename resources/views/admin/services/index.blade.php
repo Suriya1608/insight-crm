@@ -167,7 +167,7 @@ function ico($IC, $name, $size=14) {
             @if(request('search') || request('status'))
                 <a href="{{ route('admin.services.index') }}" class="cm-reset-btn" style="width:auto;padding:7px 16px;">Clear Filters</a>
             @else
-                <a href="{{ route('admin.services.create') }}" class="cm-apply-btn" style="width:auto;padding:7px 16px;text-decoration:none;color:#fff;">Add First Service</a>
+                <a href="{{ route('admin.services.create') }}" style="display:inline-flex;align-items:center;justify-content:center;gap:6px;background:#FF5C00;color:#fff;border-radius:8px;padding:8px 24px;font-size:12.5px;font-weight:600;text-decoration:none;font-family:'Poppins',sans-serif;cursor:pointer;">Add First Service</a>
             @endif
         </div>
         @else

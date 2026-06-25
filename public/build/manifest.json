@@ -4,7 +4,7 @@
     "name": "echo"
   },
   "resources/css/app.css": {
-    "file": "assets/app-txz0Q6ak.css",
+    "file": "assets/app-CwgG3oXh.css",
     "src": "resources/css/app.css",
     "isEntry": true,
     "name": "app",
@@ -22,7 +22,7 @@
     ]
   },
   "resources/js/inertia-app.jsx": {
-    "file": "assets/inertia-app-RMDsN2m6.js",
+    "file": "assets/inertia-app-DALU9hqD.js",
     "name": "inertia-app",
     "src": "resources/js/inertia-app.jsx",
     "isEntry": true,

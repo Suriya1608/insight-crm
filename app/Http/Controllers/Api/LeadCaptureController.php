@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Api;
 
 use App\Enums\ActivityType;
 use App\Http\Controllers\Controller;
-use App\Models\Service;
 use App\Models\Lead;
 use App\Models\LeadActivity;
 use App\Notifications\LeadAssignmentNotification;
@@ -65,10 +64,6 @@ class LeadCaptureController extends Controller
             ]);
         }
 
-        $serviceId = $request->filled('service')
-            ? Service::where('name', trim($request->service))->value('id')
-            : null;
-
         [$sourceCategory, $source] = $this->resolveMetaSource(
             $request->input('utm_source'),
             $request->input('utm_medium'),
@@ -87,7 +82,7 @@ class LeadCaptureController extends Controller
             'district'        => $request->district ?: null,
             'state'           => $request->state ?: null,
             'pincode'         => $request->pincode ?: null,
-            'service_id'      => $serviceId,
+            'service_name'    => $request->filled('service') ? trim($request->service) : null,
             'source'          => $source,
             'source_type'     => 'landing_page',
             'source_category' => $sourceCategory,

@@ -51,7 +51,7 @@ class LeadsExport implements FromQuery, WithHeadings, WithMapping, WithColumnWid
         if (!empty($filters['manager_id']))       $query->where('assigned_by',      $filters['manager_id']);
         if (!empty($filters['telecaller_id']))    $query->where('assigned_to',       $filters['telecaller_id']);
         if (!empty($filters['status']))           $query->where('status',            $filters['status']);
-        if (!empty($filters['service_id']))        $query->where('service_id', $filters['service_id']);
+        if (!empty($filters['service_name']))      $query->where('service_name', 'like', '%' . $filters['service_name'] . '%');
         if (!empty($filters['source']))           $query->where('source',            $filters['source']);
         if (!empty($filters['gender']))           $query->where('gender',            $filters['gender']);
         if (!empty($filters['state']))            $query->where('state',    'like',  '%' . $filters['state']    . '%');
@@ -131,7 +131,7 @@ class LeadsExport implements FromQuery, WithHeadings, WithMapping, WithColumnWid
             $lead->name,
             $lead->phone,
             $lead->email ?? '',
-            $lead->service?->name ?? '',
+            $lead->service_name ?? $lead->service?->name ?? '',
             $lead->source ?? '',
             $lead->gender ? ucfirst($lead->gender) : '',
             $lead->state ?? '',

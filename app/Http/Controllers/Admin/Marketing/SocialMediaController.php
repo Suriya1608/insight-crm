@@ -3,8 +3,9 @@
 namespace App\Http\Controllers\Admin\Marketing;
 
 use App\Http\Controllers\Controller;
-use App\Models\Course;
 use App\Models\Lead;
+use App\Models\Service;
+use App\Services\LeadCodeGenerator;
 use App\Models\Setting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
@@ -178,21 +179,14 @@ class SocialMediaController extends Controller
             }
         }
 
-        $courseId = $course ? Course::where('name', trim($course))->value('id') : null;
+        $serviceId = $course ? Service::where('name', trim($course))->value('id') : null;
 
-        try {
-            $academicYearId = \App\Models\AcademicYear::current()?->id;
-        } catch (\Throwable) {
-            $academicYearId = null;
-        }
-
-        Lead::create([
+        $lead = Lead::create([
+            'lead_code'        => LeadCodeGenerator::placeholder(),
             'name'             => $name ?? ($email ?? 'Unknown'),
             'phone'            => $phone ?? '',
             'email'            => $email,
-            'course_id'        => $courseId,
-            'academic_year_id' => $academicYearId,
-            'quota'            => 'counselling',
+            'service_id'       => $serviceId,
             'source'           => $source,
             'source_type'      => 'landing_page',
             'source_category'  => $source,
@@ -203,6 +197,7 @@ class SocialMediaController extends Controller
             'meta_form_id'     => $formId,
             'status'           => 'new',
         ]);
+        LeadCodeGenerator::assignCode($lead);
 
         Log::info('Facebook lead created', [
             'name'        => $name,

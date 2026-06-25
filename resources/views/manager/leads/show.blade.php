@@ -100,9 +100,9 @@
                         <div class="detail-item">
                             <span class="material-icons">school</span>
                             <div class="flex-grow-1">
-                                <p class="detail-label">Course Applied</p>
+                                <p class="detail-label">Service</p>
                                 <p class="detail-value">
-                                    {{ $lead->course ?? '-' }}
+                                    {{ $lead->service_name ?? $lead->service?->name ?? '-' }}
                                 </p>
                             </div>
                         </div>

@@ -385,7 +385,6 @@ function ico($IC, $name, $size=14) {
                         <th style="width:36px;">#</th>
                         <th>Lead</th>
                         <th>Phone</th>
-                        <th>Course</th>
                         <th>Status</th>
                         <th>Manager</th>
                         <th>Telecaller</th>
@@ -439,7 +438,6 @@ function ico($IC, $name, $size=14) {
                                 </div>
                             </td>
                             <td style="font-size:12px;color:#374151;font-weight:500;">{{ $lead->phone ?? '—' }}</td>
-                            <td style="font-size:11.5px;color:#9CA3AF;max-width:140px;">{{ $lead->service?->name ?? '—' }}</td>
                             <td>
                                 <span class="lm-status {{ $stClass }}">
                                     {{ ucfirst(str_replace('_', ' ', $lead->status)) }}

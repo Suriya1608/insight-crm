@@ -176,12 +176,7 @@ function ico($IC, $name, $size=14) {
             {{-- Service ── --}}
             <div>
                 <label class="lm-fi-lbl">Service</label>
-                <select name="service_id" class="lm-fi">
-                    <option value="">All Services</option>
-                    @foreach($services as $s)
-                        <option value="{{ $s->id }}" {{ request('service_id')==$s->id ? 'selected' : '' }}>{{ $s->name }}</option>
-                    @endforeach
-                </select>
+                <input type="text" name="service_name" class="lm-fi" placeholder="Any service…" value="{{ request('service_name') }}">
             </div>
 
             {{-- Date range ── --}}

@@ -56,9 +56,7 @@ function SectionDivider({ icon: Icon, title }) {
     );
 }
 
-export default function Create({ courses, academic_years, store_url }) {
-    const activeYear = academic_years?.find(y => y.is_active);
-
+export default function Create({ store_url }) {
     const form = useForm({
         name:             '',
         phone:            '',
@@ -70,8 +68,7 @@ export default function Create({ courses, academic_years, store_url }) {
         district:         '',
         state:            '',
         pincode:          '',
-        course_id:        '',
-        academic_year_id: activeYear ? String(activeYear.id) : '',
+        service_name:     '',
         source_category:  '',
         source_detail:    '',
     });
@@ -243,34 +240,17 @@ export default function Create({ courses, academic_years, store_url }) {
                                 {form.errors.address && <div className="invalid-feedback">{form.errors.address}</div>}
                             </div>
 
-                            {/* ── Enrolment ── */}
-                            <SectionDivider icon={LuFileText} title="Enrolment Details" />
+                            {/* ── Interest ── */}
+                            <SectionDivider icon={LuFileText} title="Interest / Service" />
 
                             <div className="col-md-6">
-                                <label className="form-label">Academic Year</label>
-                                <select className="form-select" value={form.data.academic_year_id}
-                                    onChange={e => form.setData('academic_year_id', e.target.value)}>
-                                    <option value="">— Select Year —</option>
-                                    {(academic_years || []).map(y => (
-                                        <option key={y.id} value={y.id}>
-                                            {y.name}{y.is_active ? ' (Current)' : ''}
-                                        </option>
-                                    ))}
-                                </select>
-                                {activeYear && !form.data.academic_year_id && (
-                                    <div className="form-text">Current year: <strong>{activeYear.name}</strong></div>
-                                )}
-                            </div>
-
-                            <div className="col-md-6">
-                                <label className="form-label">Course</label>
-                                <select className="form-select" value={form.data.course_id}
-                                    onChange={e => form.setData('course_id', e.target.value)}>
-                                    <option value="">— Select Course —</option>
-                                    {courses.map(c => (
-                                        <option key={c.id} value={c.id}>{c.name}</option>
-                                    ))}
-                                </select>
+                                <label className="form-label">Service / Interest</label>
+                                <input type="text"
+                                    className={`form-control${form.errors.service_name ? ' is-invalid' : ''}`}
+                                    placeholder="e.g. Digital Marketing, Real Estate, Clinic…"
+                                    value={form.data.service_name}
+                                    onChange={e => form.setData('service_name', e.target.value)} />
+                                {form.errors.service_name && <div className="invalid-feedback">{form.errors.service_name}</div>}
                             </div>
 
                             {/* ── Source ── */}

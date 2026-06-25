@@ -239,7 +239,7 @@ class LeadController extends Controller
             'phone'         => $lead->phone,
             'email'         => $lead->email,
             'source'        => $lead->source,
-            'service'       => $lead->service?->name,
+            'service'       => $lead->service_name ?? $lead->service?->name,
             'status'        => $lead->status,
             'assigned_user' => $lead->assignedUser?->name,
             'days_aged'     => $lead->days_aged,
@@ -338,10 +338,7 @@ class LeadController extends Controller
 
     public function create()
     {
-        $services = Service::active()->orderBy('sort_order')->orderBy('name')->get(['id', 'name']);
-
         return Inertia::render('Manager/Leads/Create', [
-            'services'  => $services->map(fn($s) => ['id' => $s->id, 'name' => $s->name])->values(),
             'store_url' => route('manager.leads.store'),
         ]);
     }
@@ -359,7 +356,7 @@ class LeadController extends Controller
             'district'         => 'nullable|string|max:100',
             'state'            => 'nullable|string|max:100',
             'pincode'          => 'nullable|string|max:10',
-            'service_id'      => 'nullable|integer|exists:services,id',
+            'service_name'     => 'nullable|string|max:255',
             'source_category'  => 'nullable|string|max:50',
             'source_detail'    => 'nullable|string|max:255',
         ]);
@@ -392,7 +389,7 @@ class LeadController extends Controller
             'district'         => $request->district ?: null,
             'state'            => $request->state ?: null,
             'pincode'          => $request->pincode ?: null,
-            'service_id'       => $request->service_id ?: null,
+            'service_name'     => $request->service_name ?: null,
             'source'           => 'manual',
             'source_type'      => 'manual',
             'source_category'  => $request->source_category ?: null,
@@ -879,7 +876,7 @@ class LeadController extends Controller
             'lead_code'     => $lead->lead_code,
             'name'          => $lead->name,
             'phone'         => $lead->phone,
-            'service'       => $lead->service?->name,
+            'service'       => $lead->service_name ?? $lead->service?->name,
             'assigned_user' => $lead->assignedUser?->name,
             'is_duplicate'  => $lead->is_duplicate,
             'days_aged'     => $lead->days_aged,
@@ -950,7 +947,7 @@ class LeadController extends Controller
             'lead_code'     => $lead->lead_code,
             'name'          => $lead->name,
             'phone'         => $lead->phone,
-            'service'       => $lead->service?->name,
+            'service'       => $lead->service_name ?? $lead->service?->name,
             'assigned_user' => $lead->assignedUser?->name,
             'is_duplicate'  => $lead->is_duplicate,
             'days_aged'     => $lead->days_aged,

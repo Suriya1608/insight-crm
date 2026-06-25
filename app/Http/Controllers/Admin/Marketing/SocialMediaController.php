@@ -4,15 +4,22 @@ namespace App\Http\Controllers\Admin\Marketing;
 
 use App\Http\Controllers\Controller;
 use App\Models\Lead;
-use App\Models\Service;
+use App\Models\LeadActivity;
+use App\Models\User;
+use App\Notifications\LeadAssignmentNotification;
+use App\Services\LeadAssignmentService;
 use App\Services\LeadCodeGenerator;
 use App\Models\Setting;
+use App\Enums\ActivityType;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
 class SocialMediaController extends Controller
 {
+    public function __construct(private LeadAssignmentService $leadAssignment) {}
+
     public function index()
     {
         $facebookConnected = (bool) Setting::getSecure('fb_leads_page_token');
@@ -141,7 +148,7 @@ class SocialMediaController extends Controller
         }
 
         $name  = $fields['full_name'] ?? $fields['name'] ?? null;
-        $phone = $fields['phone_number'] ?? $fields['phone'] ?? null;
+        $phone = $fields['phone_number'] ?? $fields['phone'] ?? $fields['whatsapp_number'] ?? $fields['mobile'] ?? null;
         $email = $fields['email'] ?? null;
 
         // Require at least a phone or email to create a lead
@@ -154,6 +161,9 @@ class SocialMediaController extends Controller
             ?? $fields['program']
             ?? $fields['course_interest']
             ?? $fields['area_of_interest']
+            ?? $fields['business_type']
+            ?? $fields['service']
+            ?? $fields['interest']
             ?? null;
 
         // Meta ad identifiers — from webhook payload and Graph API response
@@ -179,14 +189,12 @@ class SocialMediaController extends Controller
             }
         }
 
-        $serviceId = $course ? Service::where('name', trim($course))->value('id') : null;
-
         $lead = Lead::create([
             'lead_code'        => LeadCodeGenerator::placeholder(),
             'name'             => $name ?? ($email ?? 'Unknown'),
             'phone'            => $phone ?? '',
             'email'            => $email,
-            'service_id'       => $serviceId,
+            'service_name'     => $course ? trim($course) : null,
             'source'           => $source,
             'source_type'      => 'landing_page',
             'source_category'  => $source,
@@ -199,6 +207,40 @@ class SocialMediaController extends Controller
         ]);
         LeadCodeGenerator::assignCode($lead);
 
+        // Auto-assign to manager via round-robin
+        $this->leadAssignment->assignIncomingLead($lead);
+
+        LeadActivity::create([
+            'lead_id'       => $lead->id,
+            'user_id'       => null,
+            'type'          => ActivityType::Note->value,
+            'description'   => 'Lead captured from Facebook Ads',
+            'meta_data'     => null,
+            'activity_time' => Carbon::now('Asia/Kolkata')->format('Y-m-d H:i:s'),
+        ]);
+
+        $managerId = $lead->fresh()->assigned_by;
+        if ($managerId) {
+            $manager = User::find($managerId);
+            if ($manager) {
+                $manager->notify(new LeadAssignmentNotification(
+                    title:   'New Facebook Lead',
+                    message: 'Lead ' . $lead->lead_code . ' from Facebook Ads auto-assigned to you.',
+                    link:    route('manager.leads.show', encrypt($lead->id)),
+                    meta:    ['type' => 'lead_assignment', 'lead_id' => $lead->id]
+                ));
+            }
+
+            LeadActivity::create([
+                'lead_id'       => $lead->id,
+                'user_id'       => null,
+                'type'          => ActivityType::Assignment->value,
+                'description'   => "Auto-assigned to manager #{$managerId}",
+                'meta_data'     => ['manager_id' => $managerId],
+                'activity_time' => Carbon::now('Asia/Kolkata')->format('Y-m-d H:i:s'),
+            ]);
+        }
+
         Log::info('Facebook lead created', [
             'name'        => $name,
             'phone'       => $phone,
@@ -207,6 +249,7 @@ class SocialMediaController extends Controller
             'adset_id'    => $adsetId,
             'campaign_id' => $campaignId,
             'form_id'     => $formId,
+            'manager_id'  => $managerId,
         ]);
     }
 

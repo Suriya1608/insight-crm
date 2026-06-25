@@ -245,13 +245,13 @@ function EditContactModal({ lead, urls, onSaved, onClose }) {
 const EMPTY_FORM = {
     search:'', telecaller:'', status:'', date_range:'',
     date_from:'', date_to:'',
-    course_id:'', academic_year_id:'', quota:'', source:'', gender:'',
+    source:'', gender:'',
     state:'', city:'', district:'',
     followup:'', no_activity_days:'',
     sla:'', is_duplicate:'', is_active:'',
     aged_min:'', aged_max:'',
 };
-const ADV_KEYS = ['course_id','academic_year_id','quota','source','gender','state','city','district','followup','no_activity_days','sla','is_duplicate','is_active','aged_min','aged_max'];
+const ADV_KEYS = ['source','gender','state','city','district','followup','no_activity_days','sla','is_duplicate','is_active','aged_min','aged_max'];
 function hasAdv(f) { return ADV_KEYS.some(k => f[k] !== '' && f[k] != null); }
 function fmtSource(s) { if (!s) return '—'; return s.replace(/\b\w/g, c=>c.toUpperCase()); }
 
@@ -261,7 +261,7 @@ const AVATARS = [
 ];
 
 // ─── Main ─────────────────────────────────────────────────────────────────────
-export default function Index({ leads: iLeads, telecallers, courses, academicYears, sources, totalLeads, newLeads, assignedLeads, followupToday, filters }) {
+export default function Index({ leads: iLeads, telecallers, sources, totalLeads, newLeads, assignedLeads, followupToday, filters }) {
     const [leadsState, setLeadsState] = useState(iLeads);
     const [form,       setForm]       = useState({ ...EMPTY_FORM, ...filters });
     const [adv,        setAdv]        = useState(() => hasAdv({ ...EMPTY_FORM, ...filters }));
@@ -537,32 +537,11 @@ export default function Index({ leads: iLeads, telecallers, courses, academicYea
                                 {adv && (
                                     <div className="ld-adv mb-2">
                                         <div style={{ display:'flex', flexDirection:'column', gap:7 }}>
-                                            <div><label className="ld-albl">Course</label>
-                                                <FS value={form.course_id} onChange={e=>setForm({...form,course_id:e.target.value})}>
-                                                    <option value="">All Courses</option>
-                                                    {(courses??[]).map(c=><option key={c.id} value={c.id}>{c.name}</option>)}
+                                            <div><label className="ld-albl">Source</label>
+                                                <FS value={form.source} onChange={e=>setForm({...form,source:e.target.value})}>
+                                                    <option value="">All Sources</option>
+                                                    {(sources??[]).map(s=><option key={s} value={s}>{fmtSource(s)}</option>)}
                                                 </FS>
-                                            </div>
-                                            <div><label className="ld-albl">Academic Year</label>
-                                                <FS value={form.academic_year_id} onChange={e=>setForm({...form,academic_year_id:e.target.value})}>
-                                                    <option value="">All Years</option>
-                                                    {(academicYears??[]).map(y=><option key={y.id} value={y.id}>{y.name}</option>)}
-                                                </FS>
-                                            </div>
-                                            <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:6 }}>
-                                                <div><label className="ld-albl">Quota</label>
-                                                    <FS value={form.quota} onChange={e=>setForm({...form,quota:e.target.value})}>
-                                                        <option value="">All</option>
-                                                        <option value="management">Management</option>
-                                                        <option value="counselling">Counselling</option>
-                                                    </FS>
-                                                </div>
-                                                <div><label className="ld-albl">Source</label>
-                                                    <FS value={form.source} onChange={e=>setForm({...form,source:e.target.value})}>
-                                                        <option value="">All Sources</option>
-                                                        {(sources??[]).map(s=><option key={s} value={s}>{fmtSource(s)}</option>)}
-                                                    </FS>
-                                                </div>
                                             </div>
                                             <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:6 }}>
                                                 <div><label className="ld-albl">Gender</label>
@@ -673,7 +652,6 @@ export default function Index({ leads: iLeads, telecallers, courses, academicYea
                                         <th>Name</th>
                                         <th>Phone</th>
                                         <th>Source</th>
-                                        <th>Course</th>
                                         <th>Status</th>
                                         <th>Assigned To</th>
                                         <th>Follow-up</th>
@@ -720,11 +698,6 @@ export default function Index({ leads: iLeads, telecallers, courses, academicYea
                                                         <td>
                                                             {lead.source
                                                                 ? <span className="ld-src">{fmtSource(lead.source)}</span>
-                                                                : <span style={{ color:MUT }}>—</span>}
-                                                        </td>
-                                                        <td>
-                                                            {lead.course
-                                                                ? <span className="ld-course" title={lead.course}>{lead.course}</span>
                                                                 : <span style={{ color:MUT }}>—</span>}
                                                         </td>
                                                         <td>

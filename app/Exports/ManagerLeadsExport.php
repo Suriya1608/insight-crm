@@ -57,8 +57,8 @@ class ManagerLeadsExport implements FromQuery, WithHeadings, WithMapping, WithCo
             }
         }
 
-        if (!empty($filters['service_id'])) {
-            $query->where('service_id', $filters['service_id']);
+        if (!empty($filters['service_name'])) {
+            $query->where('service_name', 'like', '%' . $filters['service_name'] . '%');
         }
 
         if (!empty($filters['source'])) {
@@ -152,7 +152,7 @@ class ManagerLeadsExport implements FromQuery, WithHeadings, WithMapping, WithCo
             $lead->name,
             $lead->phone,
             $lead->email ?? '',
-            $lead->service?->name ?? '',
+            $lead->service_name ?? $lead->service?->name ?? '',
             $lead->source ?? '',
             $lead->gender ? ucfirst($lead->gender) : '',
             $lead->state ?? '',

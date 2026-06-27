@@ -556,6 +556,7 @@ class LeadController extends Controller
             'state'       => $lead->state,
             'pincode'     => $lead->pincode,
             'status'          => $lead->status,
+            'service'         => $lead->service_name ?? $lead->service?->name,
             'course'          => $lead->enrolledCourse?->name,
             'course_id'       => $lead->course_id,
             'quota'           => $lead->quota,

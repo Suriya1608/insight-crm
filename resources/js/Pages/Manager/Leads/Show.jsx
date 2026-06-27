@@ -157,9 +157,7 @@ function ProfileCard({ lead, telecallers, assignUrl, onEditContact }) {
                 </div>
 
                 {[
-                    { Icon: LuFileText,  label: 'Course Applied', value: lead.course || '—' },
-                    { Icon: LuCalendar,  label: 'Academic Year',  value: lead.academic_year || '—' },
-                    { Icon: LuUser,      label: 'Quota',          value: lead.quota ? lead.quota.charAt(0).toUpperCase() + lead.quota.slice(1) : '—' },
+                    { Icon: LuFileText,  label: 'Service',        value: lead.service || '—' },
                     { Icon: LuExternalLink, label: 'Source',      value: sourceLabel(lead) },
                 ].map(d => (
                     <div key={d.label} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '8px 12px', background: '#f8fafc', borderRadius: 10 }}>

@@ -41,7 +41,7 @@ function ProfileCard({ lead }) {
     const details = [
         { icon: 'phone',  label: 'Phone',          value: lead.phone },
         { icon: 'mail',   label: 'Email',           value: lead.email   || '—' },
-        { icon: 'school', label: 'Course Applied',  value: lead.course  || '—' },
+        { icon: 'school', label: 'Service',          value: lead.service || '—' },
         { icon: 'person', label: 'Assigned By',     value: lead.assigned_by || '—', green: true },
     ];
 

@@ -608,7 +608,7 @@ class LeadController extends Controller
                 'district'      => $lead->district,
                 'state'         => $lead->state,
                 'pincode'       => $lead->pincode,
-                'service'         => $lead->service?->name,
+                'service'         => $lead->service_name ?? $lead->service?->name,
                 'service_id'      => $lead->service_id,
                 'status'          => $lead->status,
                 'assigned_to'     => $lead->assigned_to,

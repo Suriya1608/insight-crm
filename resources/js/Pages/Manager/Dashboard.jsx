@@ -464,7 +464,7 @@ function LeadSourceChart({ leadSource }) {
 // ── Pipeline Funnel ────────────────────────────────────────────────────────────
 function PipelineFunnel({ overallLeads, pipelineStages = {} }) {
     const stages = [
-        { label: 'New Leads',  count: overallLeads,                    color: '#1D1D1D' },
+        { label: 'New Leads',  count: pipelineStages.new_leads  ?? 0,  color: '#1D1D1D' },
         { label: 'Contacted',  count: pipelineStages.contacted  ?? 0,  color: '#FF5C00' },
         { label: 'Interested', count: pipelineStages.interested ?? 0,  color: '#FF8C4A' },
         { label: 'Follow-up',  count: pipelineStages.followup   ?? 0,  color: '#f59e0b' },

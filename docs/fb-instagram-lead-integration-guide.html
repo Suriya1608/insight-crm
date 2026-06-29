@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Facebook & Instagram Lead Integration – Setup Guide</title>
+  <style>
+    :root {
+      --blue: #1877f2;
+      --insta: #e1306c;
+      --dark: #1a1a2e;
+      --card: #ffffff;
+      --bg: #f4f6fb;
+      --border: #dde3ef;
+      --code-bg: #1e1e2e;
+      --code-fg: #cdd6f4;
+      --success: #16a34a;
+      --warning: #d97706;
+      --danger: #dc2626;
+      --radius: 10px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: #2d3748;
+      line-height: 1.7;
+    }
+
+    /* ── Header ── */
+    header {
+      background: linear-gradient(135deg, var(--blue) 0%, #0a52c4 50%, var(--insta) 100%);
+      color: #fff;
+      padding: 48px 32px 40px;
+      text-align: center;
+    }
+    header h1 { font-size: 2.2rem; font-weight: 700; letter-spacing: -0.5px; }
+    header p  { margin-top: 10px; font-size: 1.05rem; opacity: .88; }
+    .badges   { display: flex; justify-content: center; gap: 12px; margin-top: 18px; flex-wrap: wrap; }
+    .badge    { background: rgba(255,255,255,.18); border: 1px solid rgba(255,255,255,.3);
+                border-radius: 20px; padding: 4px 14px; font-size: .82rem; font-weight: 600; }
+
+    /* ── Layout ── */
+    .container { max-width: 960px; margin: 0 auto; padding: 40px 24px 80px; }
+
+    /* ── TOC ── */
+    .toc {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px 28px;
+      margin-bottom: 40px;
+    }
+    .toc h2 { font-size: 1rem; font-weight: 700; color: var(--blue); margin-bottom: 12px; text-transform: uppercase; letter-spacing: .06em; }
+    .toc ol  { padding-left: 20px; }
+    .toc li  { margin: 6px 0; }
+    .toc a   { color: #3b5cf6; text-decoration: none; font-weight: 500; }
+    .toc a:hover { text-decoration: underline; }
+
+    /* ── Sections ── */
+    section { margin-bottom: 48px; }
+    section h2 {
+      font-size: 1.45rem; font-weight: 700; color: var(--dark);
+      border-left: 5px solid var(--blue); padding-left: 14px;
+      margin-bottom: 20px;
+    }
+    section.insta h2 { border-color: var(--insta); }
+
+    /* ── Cards ── */
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px 28px;
+      margin-bottom: 20px;
+    }
+    .card h3 { font-size: 1.05rem; font-weight: 700; margin-bottom: 10px; color: var(--dark); }
+
+    /* ── Steps ── */
+    .steps { counter-reset: step; }
+    .step  {
+      display: flex; gap: 18px; align-items: flex-start;
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 20px 22px; margin-bottom: 14px;
+    }
+    .step-num {
+      counter-increment: step;
+      flex-shrink: 0;
+      width: 36px; height: 36px;
+      background: var(--blue); color: #fff;
+      border-radius: 50%; display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: .95rem;
+    }
+    section.insta .step-num { background: var(--insta); }
+    .step-body h4 { font-weight: 700; margin-bottom: 6px; color: var(--dark); }
+    .step-body p, .step-body ul, .step-body ol { font-size: .93rem; color: #4a5568; }
+    .step-body ul, .step-body ol { padding-left: 18px; margin-top: 6px; }
+    .step-body li { margin: 4px 0; }
+
+    /* ── Code blocks ── */
+    pre {
+      background: var(--code-bg); color: var(--code-fg);
+      border-radius: 8px; padding: 18px 20px;
+      font-size: .82rem; overflow-x: auto; margin: 12px 0;
+      line-height: 1.6;
+    }
+    code { font-family: 'Consolas', 'Fira Code', monospace; }
+    .inline-code {
+      background: #eef2ff; color: #3730a3;
+      padding: 1px 7px; border-radius: 4px;
+      font-family: 'Consolas', monospace; font-size: .875em;
+    }
+
+    /* ── Alerts ── */
+    .alert {
+      border-radius: 8px; padding: 14px 18px; margin: 14px 0;
+      font-size: .9rem; display: flex; gap: 10px; align-items: flex-start;
+    }
+    .alert-icon { font-size: 1.1rem; flex-shrink: 0; margin-top: 1px; }
+    .alert-info    { background: #eff6ff; border: 1px solid #bfdbfe; color: #1e40af; }
+    .alert-warning { background: #fffbeb; border: 1px solid #fde68a; color: #92400e; }
+    .alert-success { background: #f0fdf4; border: 1px solid #bbf7d0; color: #14532d; }
+    .alert-danger  { background: #fef2f2; border: 1px solid #fecaca; color: #991b1b; }
+
+    /* ── Table ── */
+    table { width: 100%; border-collapse: collapse; font-size: .9rem; }
+    th { background: #f1f5f9; padding: 10px 14px; text-align: left; font-weight: 700; color: var(--dark); border: 1px solid var(--border); }
+    td { padding: 10px 14px; border: 1px solid var(--border); vertical-align: top; }
+    tr:nth-child(even) td { background: #f8fafc; }
+
+    /* ── Flow diagram ── */
+    .flow {
+      display: flex; align-items: center; flex-wrap: wrap; gap: 0;
+      margin: 16px 0;
+    }
+    .flow-node {
+      background: #eff6ff; border: 2px solid #bfdbfe; border-radius: 8px;
+      padding: 10px 16px; font-size: .82rem; font-weight: 600; color: #1e40af;
+      text-align: center; min-width: 110px;
+    }
+    section.insta .flow-node { background: #fdf2f8; border-color: #f9a8d4; color: #9d174d; }
+    .flow-arrow { font-size: 1.2rem; color: #94a3b8; padding: 0 6px; }
+
+    /* ── Checklist ── */
+    .checklist { list-style: none; padding: 0; }
+    .checklist li { display: flex; gap: 10px; align-items: flex-start; padding: 7px 0; font-size: .92rem; border-bottom: 1px solid #f1f5f9; }
+    .checklist li:last-child { border: none; }
+    .check { color: var(--success); font-size: 1rem; flex-shrink: 0; margin-top: 2px; }
+
+    /* ── Section divider ── */
+    .divider {
+      text-align: center; margin: 40px 0 36px;
+      position: relative;
+    }
+    .divider::before {
+      content: '';
+      position: absolute; top: 50%; left: 0; right: 0;
+      border-top: 2px dashed var(--border);
+    }
+    .divider span {
+      position: relative; background: var(--bg);
+      padding: 0 16px; font-weight: 700; color: #94a3b8; font-size: .85rem;
+      text-transform: uppercase; letter-spacing: .08em;
+    }
+
+    /* ── Footer ── */
+    footer {
+      text-align: center; padding: 24px;
+      font-size: .82rem; color: #94a3b8;
+      border-top: 1px solid var(--border); background: var(--card);
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Facebook &amp; Instagram Lead Integration</h1>
+  <p>Step-by-step setup guide for connecting Meta Lead Ads to Insight CRM</p>
+  <div class="badges">
+    <span class="badge">Facebook Lead Ads</span>
+    <span class="badge">Instagram Ads</span>
+    <span class="badge">Meta Webhooks</span>
+    <span class="badge">Laravel / PHP</span>
+    <span class="badge">Graph API v19</span>
+  </div>
+</header>
+
+<div class="container">
+
+  <!-- TOC -->
+  <nav class="toc">
+    <h2>Table of Contents</h2>
+    <ol>
+      <li><a href="#overview">Overview &amp; Architecture</a></li>
+      <li><a href="#meta-app">Part 1 – Create &amp; Configure a Meta App</a></li>
+      <li><a href="#fb-lead-ads">Part 2 – Facebook Lead Ads Webhook Setup</a></li>
+      <li><a href="#crm-settings">Part 3 – Configure CRM Settings</a></li>
+      <li><a href="#subscribe-page">Part 4 – Subscribe App to Facebook Page</a></li>
+      <li><a href="#test-lead">Part 5 – Test a Lead End-to-End</a></li>
+      <li><a href="#instagram-dm">Part 6 – Instagram DM Integration</a></li>
+      <li><a href="#database">Part 7 – Database Changes</a></li>
+      <li><a href="#troubleshooting">Troubleshooting</a></li>
+      <li><a href="#checklist">Final Checklist</a></li>
+    </ol>
+  </nav>
+
+  <!-- OVERVIEW -->
+  <section id="overview">
+    <h2>Overview &amp; Architecture</h2>
+
+    <div class="card">
+      <h3>What was built</h3>
+      <p>Two separate integrations were implemented inside the CRM on the <span class="inline-code">feature/fb-insta-integrate</span> branch:</p>
+      <ul style="margin-top:10px">
+        <li><strong>Facebook / Instagram Lead Ads</strong> — When a user fills a lead form on Facebook or Instagram, Meta sends a real-time webhook to the CRM. The CRM fetches the lead details from the Graph API, creates a lead record, auto-assigns it to a manager, and sends a notification.</li>
+        <li><strong>Instagram Direct Messages (DM)</strong> — Inbound Instagram DMs are received via a separate webhook and stored as conversations. CRM users can read and reply from within the CRM UI.</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3>Facebook Lead Ads – Full Flow</h3>
+      <div class="flow">
+        <div class="flow-node">User fills<br/>FB/IG form</div>
+        <span class="flow-arrow">→</span>
+        <div class="flow-node">Meta sends<br/>webhook POST</div>
+        <span class="flow-arrow">→</span>
+        <div class="flow-node">CRM validates<br/>signature</div>
+        <span class="flow-arrow">→</span>
+        <div class="flow-node">Graph API<br/>fetch lead</div>
+        <span class="flow-arrow">→</span>
+        <div class="flow-node">Lead created<br/>in CRM</div>
+        <span class="flow-arrow">→</span>
+        <div class="flow-node">Auto-assign<br/>+ Notify</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Key files in the project</h3>
+      <table>
+        <tr><th>File</th><th>Purpose</th></tr>
+        <tr><td><span class="inline-code">app/Http/Controllers/Admin/Marketing/SocialMediaController.php</span></td><td>Webhook handler – receives and processes FB/IG lead events</td></tr>
+        <tr><td><span class="inline-code">app/Http/Controllers/Admin/Settings/FacebookLeadsSettingController.php</span></td><td>Admin settings form &amp; page subscription</td></tr>
+        <tr><td><span class="inline-code">app/Http/Controllers/InstagramController.php</span></td><td>Instagram DM webhook and conversation management</td></tr>
+        <tr><td><span class="inline-code">resources/views/admin/settings/facebook-leads.blade.php</span></td><td>Facebook settings UI</td></tr>
+        <tr><td><span class="inline-code">resources/views/admin/settings/instagram.blade.php</span></td><td>Instagram settings UI</td></tr>
+        <tr><td><span class="inline-code">database/migrations/2026_06_09_100001_add_meta_ad_tracking_to_leads_table.php</span></td><td>Adds Meta ad tracking columns to leads table</td></tr>
+        <tr><td><span class="inline-code">routes/web.php</span></td><td>Webhook + settings routes</td></tr>
+      </table>
+    </div>
+  </section>
+
+  <!-- PART 1: META APP -->
+  <section id="meta-app">
+    <h2>Part 1 – Create &amp; Configure a Meta App</h2>
+
+    <div class="alert alert-info">
+      <span class="alert-icon">ℹ️</span>
+      <div>Do this once per client. You will need a Facebook Business Manager account and admin access to the client's Facebook Page.</div>
+    </div>
+
+    <div class="steps">
+
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <h4>Go to Meta for Developers</h4>
+          <p>Open <strong>developers.facebook.com</strong> → click <strong>My Apps</strong> → <strong>Create App</strong>.</p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <h4>Select App Type</h4>
+          <p>Choose <strong>"Business"</strong> as the app type. This unlocks the Lead Ads and Instagram products.</p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <h4>Add Products</h4>
+          <p>From the app dashboard, click <strong>Add Product</strong> and add both:</p>
+          <ul>
+            <li><strong>Facebook Login</strong> (needed to generate page tokens)</li>
+            <li><strong>Webhooks</strong></li>
+            <li><strong>Instagram</strong> (if using IG DMs)</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <h4>Note Your App Credentials</h4>
+          <p>Go to <strong>App Settings → Basic</strong>. Copy and save:</p>
+          <ul>
+            <li><strong>App ID</strong> (e.g. <span class="inline-code">1234567890123456</span>)</li>
+            <li><strong>App Secret</strong> (click "Show" to reveal)</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">5</div>
+        <div class="step-body">
+          <h4>Generate a Long-Lived Page Access Token</h4>
+          <p>Use the <strong>Graph API Explorer</strong> (developers.facebook.com/tools/explorer):</p>
+          <ol>
+            <li>Select your app and the client's page</li>
+            <li>Request permissions: <span class="inline-code">leads_retrieval</span>, <span class="inline-code">pages_manage_metadata</span>, <span class="inline-code">pages_read_engagement</span></li>
+            <li>Get a short-lived User Token, then exchange it for a long-lived Page Token via:</li>
+          </ol>
+          <pre><code>GET https://graph.facebook.com/v19.0/{PAGE_ID}
+    ?fields=access_token
+    &access_token={USER_LONG_LIVED_TOKEN}</code></pre>
+          <div class="alert alert-warning">
+            <span class="alert-icon">⚠️</span>
+            <div>Page Access Tokens do <strong>not</strong> expire as long as they remain active. If the user removes the app from the page, the token is invalidated.</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- PART 2: FB LEAD ADS WEBHOOK -->
+  <section id="fb-lead-ads">
+    <h2>Part 2 – Facebook Lead Ads Webhook Setup</h2>
+
+    <div class="steps">
+
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <h4>Routes must be publicly reachable</h4>
+          <p>The CRM server must be accessible from the internet. The webhook URLs are:</p>
+          <pre><code># Verification (GET) + Lead events (POST)
+GET  /webhooks/meta/facebook
+POST /webhooks/meta/facebook
+
+# Instagram DM webhook
+GET  /webhooks/meta/instagram
+POST /webhooks/meta/instagram</code></pre>
+          <div class="alert alert-warning">
+            <span class="alert-icon">⚠️</span>
+            <div>These routes are excluded from CSRF middleware in <span class="inline-code">app/Http/Middleware/VerifyCsrfToken.php</span>. Make sure that is already set up:</div>
+          </div>
+          <pre><code>// VerifyCsrfToken.php
+protected $except = [
+    'webhooks/meta/*',
+];</code></pre>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <h4>Create a Verify Token</h4>
+          <p>Make up any random secret string, e.g. <span class="inline-code">my_client_verify_abc123</span>. You will enter this in both the Meta dashboard and the CRM settings.</p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <h4>Configure Webhook in Meta Dashboard</h4>
+          <p>In your Meta App, go to <strong>Webhooks</strong> → click <strong>Subscribe to this object</strong> for <strong>Page</strong>:</p>
+          <ul>
+            <li><strong>Callback URL:</strong> <span class="inline-code">https://your-crm-domain.com/webhooks/meta/facebook</span></li>
+            <li><strong>Verify Token:</strong> the string you created above</li>
+          </ul>
+          <p>Click <strong>Verify and Save</strong>. Meta will send a GET request to your CRM with <span class="inline-code">hub_mode=subscribe</span> — the CRM responds with the challenge to confirm.</p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <h4>Subscribe to the "leadgen" field</h4>
+          <p>After the webhook is verified, click <strong>Edit</strong> on the Page object and check the <strong>leadgen</strong> field. Save.</p>
+          <div class="alert alert-info">
+            <span class="alert-icon">ℹ️</span>
+            <div>The CRM also has a one-click <strong>"Subscribe App to Page"</strong> button in the Facebook settings page that does this via Graph API automatically.</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="card">
+      <h3>How Verification Works (Code Reference)</h3>
+      <pre><code>// SocialMediaController::handleVerification()
+$mode      = $request->query('hub_mode');         // must be 'subscribe'
+$token     = $request->query('hub_verify_token'); // must match saved token
+$challenge = $request->query('hub_challenge');    // echo this back
+
+if ($mode === 'subscribe' && hash_equals($savedToken, $token)) {
+    return response($challenge, 200);  // ✅ verified
+}
+return response('Forbidden', 403);    // ❌ rejected</code></pre>
+    </div>
+
+    <div class="card">
+      <h3>How HMAC Signature Validation Works</h3>
+      <p>Every POST from Meta includes a header <span class="inline-code">X-Hub-Signature-256: sha256=&lt;hash&gt;</span>. The CRM validates it using your App Secret:</p>
+      <pre><code>$appSecret = Setting::getSecure('fb_leads_app_secret');
+$expected  = 'sha256=' . hash_hmac('sha256', $request->getContent(), $appSecret);
+
+if (! hash_equals($expected, $sig)) {
+    return response('Forbidden', 403);  // reject tampered payloads
+}</code></pre>
+    </div>
+  </section>
+
+  <!-- PART 3: CRM SETTINGS -->
+  <section id="crm-settings">
+    <h2>Part 3 – Configure CRM Settings</h2>
+
+    <p>Go to <strong>Admin → Settings → Facebook Lead Ads</strong> in the CRM.</p>
+
+    <div class="steps">
+
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <h4>Fill in All Fields</h4>
+          <table>
+            <tr><th>Field</th><th>Where to find it</th><th>Encrypted?</th></tr>
+            <tr><td>App ID</td><td>Meta App → App Settings → Basic</td><td>No</td></tr>
+            <tr><td>App Secret</td><td>Meta App → App Settings → Basic</td><td>Yes</td></tr>
+            <tr><td>Page Access Token</td><td>Graph API Explorer or manual exchange</td><td>Yes</td></tr>
+            <tr><td>Page ID</td><td>Facebook Page → About → Page ID</td><td>Yes</td></tr>
+            <tr><td>Webhook Verify Token</td><td>The custom string you created in Part 2, Step 2</td><td>No</td></tr>
+          </table>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <h4>Save Settings</h4>
+          <p>Click <strong>Save</strong>. The app secret and tokens are stored encrypted in the database using <span class="inline-code">Setting::setSecure()</span>.</p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- PART 4: SUBSCRIBE PAGE -->
+  <section id="subscribe-page">
+    <h2>Part 4 – Subscribe App to Facebook Page</h2>
+
+    <div class="steps">
+
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <h4>Click "Subscribe App to Page" in CRM</h4>
+          <p>After saving settings, click the <strong>Subscribe App to Page</strong> button on the Facebook settings page. This calls:</p>
+          <pre><code>POST https://graph.facebook.com/v19.0/{PAGE_ID}/subscribed_apps
+Body: { subscribed_fields: "leadgen", access_token: "{PAGE_TOKEN}" }</code></pre>
+          <p>On success you will see: <em>"App successfully subscribed to the page. Leadgen webhook is active."</em></p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <h4>Verify Subscription in Meta Dashboard</h4>
+          <p>In your Meta App → <strong>Webhooks</strong> → Page object, you should now see the page listed as subscribed under <strong>leadgen</strong>.</p>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="alert alert-warning">
+      <span class="alert-icon">⚠️</span>
+      <div><strong>Common issue:</strong> If the subscription fails with a permission error, the Page Access Token may not have the <span class="inline-code">pages_manage_metadata</span> permission. Re-generate the token with that permission from the Graph API Explorer.</div>
+    </div>
+  </section>
+
+  <!-- PART 5: TEST LEAD -->
+  <section id="test-lead">
+    <h2>Part 5 – Test a Lead End-to-End</h2>
+
+    <div class="steps">
+
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <h4>Use the Meta Lead Ads Testing Tool</h4>
+          <p>Go to <strong>developers.facebook.com/tools/lead-ads-testing</strong>. Select your app and the client page, then click <strong>Preview Form</strong> → <strong>Create Lead</strong>.</p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <h4>Check the CRM Leads List</h4>
+          <p>Within seconds a new lead should appear in <strong>Manager → Leads</strong> with:</p>
+          <ul>
+            <li>Source: <span class="inline-code">facebook_ads</span> or <span class="inline-code">instagram_ads</span></li>
+            <li>Activity: "Lead captured from Facebook Ads"</li>
+            <li>Ad tracking fields populated (ad ID, campaign ID, form ID)</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <h4>Check Laravel Logs</h4>
+          <p>If no lead appears, check <span class="inline-code">storage/logs/laravel.log</span>. The webhook logs every step:</p>
+          <pre><code>[INFO]  Facebook webhook received  { object: "page" }
+[INFO]  Facebook lead raw fields   { fields: { full_name: "...", phone_number: "..." } }
+[INFO]  Facebook lead created      { name: "...", source: "facebook_ads", ... }</code></pre>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="card">
+      <h3>Lead Field Mapping</h3>
+      <p>The CRM automatically maps these Facebook form field names to lead fields:</p>
+      <table>
+        <tr><th>Facebook Field Name(s)</th><th>CRM Field</th></tr>
+        <tr><td><span class="inline-code">full_name</span>, <span class="inline-code">name</span></td><td>name</td></tr>
+        <tr><td><span class="inline-code">phone_number</span>, <span class="inline-code">phone</span>, <span class="inline-code">whatsapp_number</span>, <span class="inline-code">mobile</span></td><td>phone</td></tr>
+        <tr><td><span class="inline-code">email</span></td><td>email</td></tr>
+        <tr><td><span class="inline-code">course</span>, <span class="inline-code">program</span>, <span class="inline-code">course_interest</span>, <span class="inline-code">area_of_interest</span>, <span class="inline-code">service</span>, <span class="inline-code">interest</span>, <span class="inline-code">looking_for</span>, <span class="inline-code">requirement</span>, <span class="inline-code">product</span>, <span class="inline-code">enquiry_for</span></td><td>service_name</td></tr>
+        <tr><td><em>any other custom field</em></td><td>service_name (fallback)</td></tr>
+      </table>
+      <div class="alert alert-info">
+        <span class="alert-icon">ℹ️</span>
+        <div>If the client uses a non-standard field name for the service/interest, add it to the <span class="inline-code">$knownServiceKeys</span> array in <span class="inline-code">SocialMediaController::createLeadFromFacebook()</span>.</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Instagram vs Facebook Source Detection</h3>
+      <p>When a lead comes through, the CRM checks whether the ad ran on Instagram or Facebook by querying the ad object:</p>
+      <pre><code>GET https://graph.facebook.com/v19.0/{AD_ID}
+    ?fields=publisher_platforms
+    &access_token={PAGE_TOKEN}
+
+// Response: { "publisher_platforms": ["instagram"] }
+// → source = 'instagram_ads'
+
+// Response: { "publisher_platforms": ["facebook"] }
+// → source = 'facebook_ads'</code></pre>
+    </div>
+  </section>
+
+  <!-- PART 6: INSTAGRAM DM -->
+  <section id="instagram-dm" class="insta">
+    <h2>Part 6 – Instagram DM Integration</h2>
+
+    <div class="alert alert-info">
+      <span class="alert-icon">ℹ️</span>
+      <div>Instagram DM requires the Facebook Page to be connected to an Instagram Business/Creator account. Personal Instagram accounts are not supported by the API.</div>
+    </div>
+
+    <div class="steps">
+
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <h4>Connect Instagram Business Account</h4>
+          <p>In Facebook Page Settings → <strong>Instagram</strong>, connect the client's Instagram Business account. This is required before any API access.</p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <h4>Get Instagram User ID</h4>
+          <pre><code>GET https://graph.facebook.com/v19.0/{PAGE_ID}
+    ?fields=instagram_business_account
+    &access_token={PAGE_TOKEN}
+
+// Response: { "instagram_business_account": { "id": "17841400123456789" } }</code></pre>
+          <p>Copy the <strong>id</strong> — this is the Instagram User ID you need.</p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <h4>Configure Instagram Webhook in Meta App</h4>
+          <p>In your Meta App → <strong>Webhooks</strong> → subscribe to the <strong>Instagram</strong> object:</p>
+          <ul>
+            <li><strong>Callback URL:</strong> <span class="inline-code">https://your-crm-domain.com/webhooks/meta/instagram</span></li>
+            <li><strong>Verify Token:</strong> your custom verify token</li>
+          </ul>
+          <p>Subscribe to the <strong>messages</strong> field.</p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <h4>Add Instagram Account in CRM</h4>
+          <p>Go to <strong>Admin → Settings → Instagram</strong>. Click <strong>Add Account</strong> and fill in:</p>
+          <table>
+            <tr><th>Field</th><th>Value</th></tr>
+            <tr><td>Name</td><td>Display name for this account (e.g. client brand name)</td></tr>
+            <tr><td>Page ID</td><td>Facebook Page ID</td></tr>
+            <tr><td>Instagram User ID</td><td>From Step 2 above</td></tr>
+            <tr><td>Access Token</td><td>Long-lived Page Access Token (encrypted at rest)</td></tr>
+            <tr><td>App Secret</td><td>Optional — for webhook signature validation</td></tr>
+            <tr><td>Verify Token</td><td>Same token used in Meta Webhooks dashboard</td></tr>
+          </table>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">5</div>
+        <div class="step-body">
+          <h4>Test DM Flow</h4>
+          <p>Send a DM to the Instagram account from a personal Instagram. Within seconds it should appear in <strong>Manager → Instagram</strong> in the CRM. The CRM stores:</p>
+          <ul>
+            <li>Sender's PSID (Page-Scoped User ID) and username</li>
+            <li>Message content and timestamp</li>
+            <li>Unread count per conversation</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">6</div>
+        <div class="step-body">
+          <h4>Reply from CRM</h4>
+          <p>Managers can reply directly in the CRM. Replies are sent via:</p>
+          <pre><code>POST https://graph.facebook.com/v19.0/{IG_USER_ID}/messages
+Body: {
+    recipient: { id: "{SENDER_PSID}" },
+    message:   { text: "Your reply here" },
+    access_token: "{PAGE_TOKEN}"
+}</code></pre>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="card">
+      <h3>Instagram DM – Database Tables</h3>
+      <table>
+        <tr><th>Table</th><th>Purpose</th></tr>
+        <tr><td><span class="inline-code">instagram_accounts</span></td><td>Stores account config (Page ID, IG User ID, access token, verify token)</td></tr>
+        <tr><td><span class="inline-code">instagram_conversations</span></td><td>One row per unique DM thread (sender PSID, username, unread count, assignment)</td></tr>
+        <tr><td><span class="inline-code">instagram_messages</span></td><td>Individual messages in each conversation (inbound/outbound, Meta MID for dedup)</td></tr>
+      </table>
+    </div>
+  </section>
+
+  <!-- PART 7: DATABASE -->
+  <section id="database">
+    <h2>Part 7 – Database Changes</h2>
+
+    <p>Run migrations on the new client's project after pulling the branch:</p>
+    <pre><code>php artisan migrate</code></pre>
+
+    <div class="card">
+      <h3>New columns added to <span class="inline-code">leads</span> table</h3>
+      <table>
+        <tr><th>Column</th><th>Type</th><th>Purpose</th></tr>
+        <tr><td>fbclid</td><td>varchar</td><td>Facebook Click ID from URL parameter</td></tr>
+        <tr><td>utm_campaign</td><td>varchar</td><td>UTM campaign name</td></tr>
+        <tr><td>utm_medium</td><td>varchar</td><td>UTM medium (e.g. cpc, social)</td></tr>
+        <tr><td>utm_content</td><td>varchar</td><td>UTM content / ad variant</td></tr>
+        <tr><td>utm_term</td><td>varchar</td><td>UTM keyword term</td></tr>
+        <tr><td>meta_ad_id</td><td>varchar</td><td>Facebook/Instagram Ad ID</td></tr>
+        <tr><td>meta_adset_id</td><td>varchar</td><td>Ad Set ID</td></tr>
+        <tr><td>meta_campaign_id</td><td>varchar</td><td>Campaign ID</td></tr>
+        <tr><td>meta_form_id</td><td>varchar</td><td>Facebook Lead Form ID</td></tr>
+      </table>
+    </div>
+
+    <div class="card">
+      <h3>New source values in <span class="inline-code">leads.source</span></h3>
+      <table>
+        <tr><th>Value</th><th>When set</th></tr>
+        <tr><td><span class="inline-code">facebook_ads</span></td><td>Lead came from a Facebook ad placement</td></tr>
+        <tr><td><span class="inline-code">instagram_ads</span></td><td>Lead came from an Instagram ad placement</td></tr>
+      </table>
+    </div>
+  </section>
+
+  <!-- TROUBLESHOOTING -->
+  <section id="troubleshooting">
+    <h2>Troubleshooting</h2>
+
+    <div class="card">
+      <h3>Webhook verification fails (403)</h3>
+      <div class="alert alert-danger">
+        <span class="alert-icon">❌</span>
+        <div><strong>Symptom:</strong> Meta dashboard shows "Callback URL failed" during verification.</div>
+      </div>
+      <p><strong>Causes &amp; fixes:</strong></p>
+      <ul>
+        <li>The Verify Token in Meta dashboard does not match the one saved in CRM settings → update to match exactly.</li>
+        <li>The CRM URL is not publicly reachable (local dev server) → use ngrok or deploy to server first.</li>
+        <li>CSRF protection is blocking the GET request → ensure <span class="inline-code">webhooks/meta/*</span> is in <span class="inline-code">VerifyCsrfToken::$except</span>.</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3>Webhook verified but leads not appearing</h3>
+      <ul>
+        <li>App is not subscribed to the page → click "Subscribe App to Page" in CRM settings.</li>
+        <li>Page Access Token expired or lacks <span class="inline-code">leads_retrieval</span> permission → regenerate the token.</li>
+        <li>HMAC mismatch → check that App Secret in CRM matches the one in Meta App Settings.</li>
+        <li>Check <span class="inline-code">storage/logs/laravel.log</span> for detailed error messages.</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3>Page subscription fails ("Subscribe App to Page" button)</h3>
+      <ul>
+        <li>Token must have <span class="inline-code">pages_manage_metadata</span> permission.</li>
+        <li>The app must be in <strong>Live mode</strong> (not Development mode) or the page admin must be a test user.</li>
+        <li>The Page ID saved in CRM must exactly match the page you are subscribing.</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3>Lead source always shows "facebook_ads" even for Instagram ads</h3>
+      <p>The CRM checks <span class="inline-code">publisher_platforms</span> via the Graph API. If the Ad ID is not accessible with the current token, it defaults to <span class="inline-code">facebook_ads</span>. Ensure the page token has ad read permissions, or this is acceptable behavior since the lead data is the same either way.</p>
+    </div>
+
+    <div class="card">
+      <h3>Duplicate leads appearing</h3>
+      <p>The CRM has a 10-minute dedup window by phone number. If the same lead is submitted twice within 10 minutes it is skipped. For longer dedup windows, update this check in <span class="inline-code">SocialMediaController::createLeadFromFacebook()</span>:</p>
+      <pre><code>Lead::where('phone', $phone)
+    ->where('created_at', '>=', now()->subMinutes(10))  // ← change this value
+    ->exists();</code></pre>
+    </div>
+
+    <div class="card">
+      <h3>Instagram DM not appearing in CRM</h3>
+      <ul>
+        <li>The Instagram account must be a <strong>Business or Creator</strong> account, not personal.</li>
+        <li>Webhook must be subscribed to the <strong>messages</strong> field on the Instagram object (not Page object).</li>
+        <li>Only one Instagram account can be active at a time in CRM settings.</li>
+        <li>Check that the Instagram User ID is correct (not the Page ID).</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- CHECKLIST -->
+  <section id="checklist">
+    <h2>Final Checklist for a New Client Project</h2>
+
+    <div class="card">
+      <h3>Meta / Facebook Setup</h3>
+      <ul class="checklist">
+        <li><span class="check">✓</span> Meta Developer App created with "Business" type</li>
+        <li><span class="check">✓</span> Webhooks product added to the app</li>
+        <li><span class="check">✓</span> App ID and App Secret copied</li>
+        <li><span class="check">✓</span> Page Access Token generated with <span class="inline-code">leads_retrieval</span> and <span class="inline-code">pages_manage_metadata</span> permissions</li>
+        <li><span class="check">✓</span> Webhook Callback URL registered: <span class="inline-code">https://domain.com/webhooks/meta/facebook</span></li>
+        <li><span class="check">✓</span> Webhook verified successfully (Meta shows green checkmark)</li>
+        <li><span class="check">✓</span> <strong>leadgen</strong> field subscribed on the Page object</li>
+        <li><span class="check">✓</span> App set to Live mode (or test users added for dev)</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3>CRM Configuration</h3>
+      <ul class="checklist">
+        <li><span class="check">✓</span> <span class="inline-code">php artisan migrate</span> run on new client database</li>
+        <li><span class="check">✓</span> Admin → Settings → Facebook Lead Ads: all 5 fields filled and saved</li>
+        <li><span class="check">✓</span> "Subscribe App to Page" button clicked — success message shown</li>
+        <li><span class="check">✓</span> CSRF exception added for <span class="inline-code">webhooks/meta/*</span></li>
+        <li><span class="check">✓</span> Lead tested via Meta Lead Ads Testing Tool</li>
+        <li><span class="check">✓</span> Test lead appears in CRM with correct source and ad tracking fields</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3>Instagram DM (if required)</h3>
+      <ul class="checklist">
+        <li><span class="check">✓</span> Instagram Business account connected to Facebook Page</li>
+        <li><span class="check">✓</span> Instagram User ID obtained via Graph API</li>
+        <li><span class="check">✓</span> Instagram webhook registered: <span class="inline-code">https://domain.com/webhooks/meta/instagram</span></li>
+        <li><span class="check">✓</span> <strong>messages</strong> field subscribed on Instagram object</li>
+        <li><span class="check">✓</span> Admin → Settings → Instagram: account added and set as active</li>
+        <li><span class="check">✓</span> Test DM sent — appears in Manager → Instagram</li>
+        <li><span class="check">✓</span> Reply from CRM sent successfully</li>
+      </ul>
+    </div>
+
+    <div class="alert alert-success">
+      <span class="alert-icon">✅</span>
+      <div><strong>When all boxes are checked</strong>, Facebook and Instagram leads will flow into the CRM in real time, be auto-assigned to managers via round-robin, and managers will receive instant notifications.</div>
+    </div>
+  </section>
+
+</div>
+
+<footer>
+  Insight CRM · Facebook &amp; Instagram Lead Integration Guide · Generated 2026-06-27
+</footer>
+
+</body>
+</html>

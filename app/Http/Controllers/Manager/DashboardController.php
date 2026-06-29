@@ -55,9 +55,8 @@ class DashboardController extends Controller
             ->pluck('total', 'status');
 
         $pipelineStages = [
-            'contacted'  => (clone $myLeadsBase)
-                ->whereExists(fn($q) => $q->select(DB::raw(1))->from('call_logs')->whereColumn('call_logs.lead_id', 'leads.id'))
-                ->count(),
+            'new_leads'  => (int) ($pipelineStatusCounts['new'] ?? 0) + (int) ($pipelineStatusCounts['assigned'] ?? 0),
+            'contacted'  => (int) ($pipelineStatusCounts['contacted'] ?? 0),
             'interested' => (int) ($pipelineStatusCounts['interested'] ?? 0),
             'followup'   => (int) ($pipelineStatusCounts['follow_up'] ?? 0),
             'converted'  => (int) ($pipelineStatusCounts['converted'] ?? 0),
